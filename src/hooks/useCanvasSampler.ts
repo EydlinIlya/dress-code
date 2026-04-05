@@ -10,9 +10,18 @@ export function useCanvasSampler() {
   const [sampledPoint, setSampledPoint] = useState<SampledPoint | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
 
   const loadImage = useCallback((file: File) => {
+    // Revoke previous Object URL to prevent memory leak
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+    }
+
     const img = new Image();
+    const url = URL.createObjectURL(file);
+    objectUrlRef.current = url;
+
     img.onload = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -33,7 +42,21 @@ export function useCanvasSampler() {
       setImageLoaded(true);
       setSampledPoint(null);
     };
-    img.src = URL.createObjectURL(file);
+
+    img.onerror = () => {
+      setImageLoaded(false);
+    };
+
+    img.src = url;
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+    };
   }, []);
 
   const sampleAt = useCallback(
@@ -113,5 +136,6 @@ export function useCanvasSampler() {
     imageLoaded,
     loadImage,
     sampleAt,
+    setSampledPoint,
   };
 }

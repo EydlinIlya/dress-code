@@ -1,17 +1,53 @@
 import chroma from "chroma-js";
 import type { MatchResult, ColorSuggestions } from "@/types";
-import { DELTA_E_GOOD, DELTA_E_ASK, MATCH_MESSAGES } from "./constants";
+import {
+  DELTA_E_GOOD,
+  DELTA_E_ASK,
+  DELTA_E_KL,
+  DELTA_E_KC,
+  DELTA_E_KH,
+  MATCH_MESSAGES,
+  MAX_NAME_LENGTH,
+} from "./constants";
 
 export function parseColorsFromUrl(param: string): string[] {
-  return param
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(param);
+  } catch {
+    return [];
+  }
+  // Strip anything that isn't a hex char or hyphen
+  const sanitized = decoded.replace(/[^0-9a-fA-F-]/g, "");
+  return sanitized
     .split("-")
     .filter((hex) => /^[0-9a-fA-F]{6}$/.test(hex))
-    .map((hex) => `#${hex}`);
+    .map((hex) => `#${hex.toLowerCase()}`);
 }
 
 export function generateShareUrl(colors: string[]): string {
-  const encoded = colors.map((c) => c.replace("#", "")).join("-");
+  const encoded = colors
+    .map((c) => c.replace("#", "").toLowerCase().trim())
+    .join("-");
   return `/check/${encoded}`;
+}
+
+export function generateSharePageUrl(colors: string[]): string {
+  const encoded = colors
+    .map((c) => c.replace("#", "").toLowerCase().trim())
+    .join("-");
+  return `/share/${encoded}`;
+}
+
+export function sanitizeName(name: string): string {
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(name);
+  } catch {
+    decoded = name;
+  }
+  // Strip HTML tags and trim
+  return decoded.replace(/<[^>]*>/g, "").trim().slice(0, MAX_NAME_LENGTH);
 }
 
 export function evaluateMatch(
@@ -22,7 +58,7 @@ export function evaluateMatch(
   let closestColor = allowedColors[0];
 
   for (const color of allowedColors) {
-    const delta = chroma.deltaE(sampleHex, color);
+    const delta = chroma.deltaE(sampleHex, color, DELTA_E_KL, DELTA_E_KC, DELTA_E_KH);
     if (delta < minDelta) {
       minDelta = delta;
       closestColor = color;

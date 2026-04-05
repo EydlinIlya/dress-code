@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { ArrowRight } from "lucide-react";
 import { Header } from "@/components/shared/Header";
 import { ColorPickerPanel } from "@/components/host/ColorPickerPanel";
 import { ColorList } from "@/components/host/ColorList";
 import { ColorSuggestions } from "@/components/host/ColorSuggestions";
-import { ShareLinkGenerator } from "@/components/host/ShareLinkGenerator";
+import { generateSharePageUrl } from "@/lib/colors";
 import { MAX_COLORS } from "@/lib/constants";
 
 export default function HostPage() {
@@ -39,7 +40,7 @@ export default function HostPage() {
           </p>
         </section>
 
-        {/* Desktop: three-column layout */}
+        {/* Desktop: two-column layout */}
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Left column: Picker + Palette */}
           <div className="space-y-10 lg:w-[400px] shrink-0">
@@ -62,7 +63,7 @@ export default function HostPage() {
             </section>
           </div>
 
-          {/* Middle column: Suggestions */}
+          {/* Right column: Suggestions */}
           <div className="flex-1 min-w-0">
             {lastColor && (
               <section>
@@ -73,14 +74,20 @@ export default function HostPage() {
               </section>
             )}
           </div>
-
-          {/* Right column: Share link */}
-          {colors.length > 0 && (
-            <div className="lg:w-[300px] shrink-0">
-              <ShareLinkGenerator colors={colors} />
-            </div>
-          )}
         </div>
+
+        {/* Continue button */}
+        {colors.length > 0 && (
+          <div className="mt-12 flex justify-center">
+            <a
+              href={generateSharePageUrl(colors)}
+              className="soul-gradient text-on-primary font-semibold py-4 px-8 rounded-xl flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all text-lg"
+            >
+              Continue
+              <ArrowRight className="h-5 w-5" />
+            </a>
+          </div>
+        )}
       </main>
     </div>
   );
