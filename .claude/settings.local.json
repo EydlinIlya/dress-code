@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npx --version)",
       "Bash(npx create-next-app@latest dress-code --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
-      "Bash(npx shadcn@latest:*)"
+      "Bash(npx shadcn@latest:*)",
+      "Bash(npx next:*)"
     ]
   }
 }
