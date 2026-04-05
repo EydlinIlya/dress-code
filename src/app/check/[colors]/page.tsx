@@ -89,7 +89,7 @@ export default function GuestPage({
   return (
     <div className="flex flex-col min-h-full">
       <Header />
-      <main className="flex-1 pt-4 pb-16 px-6 max-w-5xl mx-auto w-full">
+      <main className="flex-1 pt-4 pb-24 px-6 max-w-5xl mx-auto w-full">
         {/* Hero with personalized greeting */}
         <section className="mb-10 max-w-xl">
           <h2 className="text-3xl md:text-4xl leading-tight font-[family-name:var(--font-heading)] font-semibold tracking-tight text-on-surface mb-3">
@@ -194,12 +194,13 @@ export default function GuestPage({
           </div>
         </div>
 
-        {/* Verdict on mobile sits below everything */}
+        {/* Verdict on mobile: sticky bottom bar */}
         {imageLoaded && sampledPoint && (
-          <div className="lg:hidden mt-10">
+          <div className="lg:hidden">
             <MatchResult
               sampledColor={sampledPoint.color}
               allowedColors={allowedColors}
+              variant="sticky"
             />
           </div>
         )}

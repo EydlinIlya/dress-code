@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 interface MatchResultProps {
   sampledColor: string;
   allowedColors: string[];
+  variant?: "card" | "sticky";
 }
 
 const config = {
@@ -33,10 +34,42 @@ const config = {
   },
 };
 
-export function MatchResult({ sampledColor, allowedColors }: MatchResultProps) {
+export function MatchResult({ sampledColor, allowedColors, variant = "card" }: MatchResultProps) {
   const result = evaluateMatch(sampledColor, allowedColors);
   const { level, message, closestColor } = result;
   const { icon: Icon, bg, text, border, swatchRing } = config[level];
+
+  if (variant === "sticky") {
+    return (
+      <div
+        className={cn(
+          "fixed bottom-0 left-0 right-0 z-50 border-t px-4 py-3 animate-fade-in-up safe-bottom",
+          bg,
+          border
+        )}
+      >
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <Icon className={cn("h-7 w-7 shrink-0", text)} />
+            <span className={cn("text-sm font-[family-name:var(--font-heading)] font-semibold", text)}>
+              {message}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <div
+              className={cn("w-9 h-9 rounded-full ring-2 shadow-sm", swatchRing)}
+              style={{ backgroundColor: sampledColor }}
+            />
+            <span className="text-on-surface-variant/40 text-xs">vs</span>
+            <div
+              className="w-9 h-9 rounded-full shadow-sm border border-outline-variant/20"
+              style={{ backgroundColor: closestColor }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -48,7 +81,6 @@ export function MatchResult({ sampledColor, allowedColors }: MatchResultProps) {
     >
       <div className="flex flex-col items-center gap-5">
         <Icon className={cn("h-12 w-12", text)} />
-
         <span
           className={cn(
             "text-lg font-[family-name:var(--font-heading)] font-semibold",
@@ -57,23 +89,17 @@ export function MatchResult({ sampledColor, allowedColors }: MatchResultProps) {
         >
           {message}
         </span>
-
         <div className="flex items-center gap-6 mt-2">
           <div className="text-center">
             <div
-              className={cn(
-                "w-14 h-14 rounded-full mx-auto ring-3 shadow-sm",
-                swatchRing
-              )}
+              className={cn("w-14 h-14 rounded-full mx-auto ring-3 shadow-sm", swatchRing)}
               style={{ backgroundColor: sampledColor }}
             />
             <span className="text-[11px] text-on-surface-variant font-mono mt-2 block">
               Your pick
             </span>
           </div>
-
           <span className="text-on-surface-variant/40 text-sm font-medium">vs</span>
-
           <div className="text-center">
             <div
               className="w-14 h-14 rounded-full mx-auto shadow-sm border border-outline-variant/20"

@@ -32,11 +32,11 @@ export function ColorPickerPanel({ colors, onAddColor }: ColorPickerPanelProps) 
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="w-full aspect-square max-h-[280px] rounded-2xl overflow-hidden shadow-sm">
+      <div className="w-full rounded-2xl shadow-sm">
         <HexColorPicker
           color={currentColor}
           onChange={setCurrentColor}
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: "100%", height: "auto" }}
         />
       </div>
 

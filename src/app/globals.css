@@ -145,3 +145,7 @@
 .soul-gradient {
   background: linear-gradient(135deg, #5b6055 0%, #4f5449 100%);
 }
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
