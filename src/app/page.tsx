@@ -1,16 +1,21 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { Suspense, useState, useCallback } from "react";
 import { ArrowRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/shared/Header";
 import { ColorPickerPanel } from "@/components/host/ColorPickerPanel";
 import { ColorList } from "@/components/host/ColorList";
 import { ColorSuggestions } from "@/components/host/ColorSuggestions";
-import { generateSharePageUrl } from "@/lib/colors";
+import { generateSharePageUrl, parseColorsFromUrl } from "@/lib/colors";
 import { MAX_COLORS } from "@/lib/constants";
 
-export default function HostPage() {
-  const [colors, setColors] = useState<string[]>([]);
+function HostPageContent() {
+  const searchParams = useSearchParams();
+  const [colors, setColors] = useState<string[]>(() => {
+    const c = searchParams.get("c");
+    return c ? parseColorsFromUrl(c) : [];
+  });
 
   const handleAddColor = useCallback((color: string) => {
     setColors((prev) => {
@@ -103,5 +108,13 @@ export default function HostPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function HostPage() {
+  return (
+    <Suspense>
+      <HostPageContent />
+    </Suspense>
   );
 }

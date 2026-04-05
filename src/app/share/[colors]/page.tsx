@@ -48,7 +48,7 @@ export default function SharePage({
       <main className="flex-1 pt-4 pb-16 px-6 max-w-5xl mx-auto w-full">
         {/* Back link */}
         <a
-          href="/"
+          href={`/?c=${allowedColors.map(c => c.replace("#", "")).join("-")}`}
           className="inline-flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
