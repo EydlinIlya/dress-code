@@ -71,10 +71,10 @@ export default function GuestPage({
   return (
     <div className="flex flex-col min-h-full">
       <Header />
-      <main className="flex-1 pt-4 pb-16 px-6 max-w-md mx-auto w-full">
+      <main className="flex-1 pt-4 pb-16 px-6 max-w-5xl mx-auto w-full">
         {/* Hero */}
-        <section className="mb-10">
-          <h2 className="text-3xl leading-tight font-[family-name:var(--font-heading)] font-semibold tracking-tight text-on-surface mb-3">
+        <section className="mb-10 max-w-xl">
+          <h2 className="text-3xl md:text-4xl leading-tight font-[family-name:var(--font-heading)] font-semibold tracking-tight text-on-surface mb-3">
             Check your outfit&apos;s color match.
           </h2>
           <p className="text-on-surface-variant leading-relaxed">
@@ -82,16 +82,40 @@ export default function GuestPage({
           </p>
         </section>
 
-        <div className="space-y-10">
-          {/* Host's Palette */}
-          <AllowedColorsDisplay colors={allowedColors} />
+        {/* Desktop: two-column layout */}
+        <div className="flex flex-col lg:flex-row gap-10">
+          {/* Left column: Palette + Encouragement */}
+          <div className="lg:w-[300px] shrink-0 space-y-6">
+            <AllowedColorsDisplay colors={allowedColors} />
 
-          {/* Upload / Canvas */}
-          <section>
+            {photos.length === 0 && (
+              <div className="flex items-center gap-3 px-5 py-4 bg-tertiary-container rounded-2xl">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-on-tertiary-container shrink-0">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span className="text-sm font-medium text-on-tertiary-container">
+                  We&apos;ll analyze your color match instantly.
+                </span>
+              </div>
+            )}
+
+            {/* Verdict on desktop sits under palette */}
+            {imageLoaded && sampledPoint && (
+              <div className="hidden lg:block">
+                <MatchResult
+                  sampledColor={sampledPoint.color}
+                  allowedColors={allowedColors}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Right column: Upload / Canvas */}
+          <div className="flex-1 min-w-0 space-y-4">
             {photos.length === 0 ? (
               <ImageUploader onUpload={handleUpload} />
             ) : (
-              <div className="space-y-4">
+              <>
                 <PhotoThumbnails
                   photos={photos}
                   activeIndex={activePhotoIndex}
@@ -120,30 +144,20 @@ export default function GuestPage({
                     }}
                   />
                 </div>
-              </div>
+              </>
             )}
-          </section>
+          </div>
+        </div>
 
-          {/* Verdict */}
-          {imageLoaded && sampledPoint && (
+        {/* Verdict on mobile sits below everything */}
+        {imageLoaded && sampledPoint && (
+          <div className="lg:hidden mt-10">
             <MatchResult
               sampledColor={sampledPoint.color}
               allowedColors={allowedColors}
             />
-          )}
-
-          {/* Encouragement */}
-          {photos.length === 0 && (
-            <div className="flex items-center justify-center gap-3 px-6 py-4 bg-tertiary-container rounded-2xl">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-on-tertiary-container">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span className="text-sm font-medium text-on-tertiary-container">
-                We&apos;ll analyze your color match instantly.
-              </span>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </main>
     </div>
   );

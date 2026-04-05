@@ -28,10 +28,10 @@ export default function HostPage() {
   return (
     <div className="flex flex-col min-h-full">
       <Header />
-      <main className="flex-1 pt-4 pb-16 px-6 max-w-md mx-auto w-full">
+      <main className="flex-1 pt-4 pb-16 px-6 max-w-5xl mx-auto w-full">
         {/* Hero */}
-        <section className="mb-12">
-          <h2 className="text-5xl leading-[1.1] font-[family-name:var(--font-heading)] font-medium tracking-tight text-on-surface mb-4">
+        <section className="mb-12 max-w-xl">
+          <h2 className="text-4xl md:text-5xl leading-[1.1] font-[family-name:var(--font-heading)] font-medium tracking-tight text-on-surface mb-4">
             Create your event&apos;s dress code.
           </h2>
           <p className="text-on-surface-variant leading-relaxed opacity-80">
@@ -39,41 +39,44 @@ export default function HostPage() {
           </p>
         </section>
 
-        <div className="space-y-10">
-          {/* Color Picker */}
-          <section className="bg-surface-low rounded-[2rem] p-6">
-            <ColorPickerPanel colors={colors} onAddColor={handleAddColor} />
-          </section>
-
-          {/* Palette */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-                Your Palette
-              </h3>
-              {colors.length > 0 && (
-                <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
-                  {colors.length}/{MAX_COLORS} colors
-                </span>
-              )}
-            </div>
-            <ColorList colors={colors} onRemove={handleRemoveColor} />
-          </section>
-
-          {/* Suggestions */}
-          {lastColor && (
-            <section>
-              <ColorSuggestions
-                baseColor={lastColor}
-                onSelect={handleAddColor}
-              />
+        {/* Desktop: two-column layout */}
+        <div className="flex flex-col lg:flex-row gap-10">
+          {/* Left column: Picker + Palette */}
+          <div className="space-y-10 lg:w-[400px] shrink-0">
+            <section className="bg-surface-low rounded-[2rem] p-6">
+              <ColorPickerPanel colors={colors} onAddColor={handleAddColor} />
             </section>
-          )}
 
-          {/* Share */}
-          {colors.length > 0 && (
-            <ShareLinkGenerator colors={colors} />
-          )}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
+                  Your Palette
+                </h3>
+                {colors.length > 0 && (
+                  <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
+                    {colors.length}/{MAX_COLORS} colors
+                  </span>
+                )}
+              </div>
+              <ColorList colors={colors} onRemove={handleRemoveColor} />
+            </section>
+          </div>
+
+          {/* Right column: Suggestions + Share */}
+          <div className="flex-1 space-y-10 min-w-0">
+            {lastColor && (
+              <section>
+                <ColorSuggestions
+                  baseColor={lastColor}
+                  onSelect={handleAddColor}
+                />
+              </section>
+            )}
+
+            {colors.length > 0 && (
+              <ShareLinkGenerator colors={colors} />
+            )}
+          </div>
         </div>
       </main>
     </div>
