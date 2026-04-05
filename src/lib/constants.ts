@@ -1,10 +1,10 @@
-export const DELTA_E_GOOD = 16;
-export const DELTA_E_ASK = 24;
+export const DELTA_E_GOOD = 18;
+export const DELTA_E_ASK = 30;
 
 // CIEDE2000 weighting factors — tune these to prioritize different dimensions
 export const DELTA_E_KL = 0.7; // lightness — forgiving on brightness (low-light photos)
-export const DELTA_E_KC = 0.9; // chroma — slight tolerance for desaturation
-export const DELTA_E_KH = 1.1; // hue — slightly strict, core of dress code matching
+export const DELTA_E_KC = 1;   // chroma
+export const DELTA_E_KH = 1;   // hue
 
 export const MAX_COLORS = 10;
 
