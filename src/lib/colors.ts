@@ -59,6 +59,18 @@ export function evaluateMatch(
 
   for (const color of allowedColors) {
     const delta = chroma.deltaE(sampleHex, color, DELTA_E_KL, DELTA_E_KC, DELTA_E_KH);
+
+    // Per-component diffs for debugging
+    const [sL, sA, sB] = chroma(sampleHex).lab();
+    const [cL, cA, cB] = chroma(color).lab();
+    const defaultDelta = chroma.deltaE(sampleHex, color);
+    console.log(
+      `[match] ${sampleHex} vs ${color}` +
+      ` | ΔL=${(sL - cL).toFixed(1)} Δa=${(sA - cA).toFixed(1)} Δb=${(sB - cB).toFixed(1)}` +
+      ` | deltaE(default)=${defaultDelta.toFixed(1)} deltaE(weighted)=${delta.toFixed(1)}` +
+      ` | weights: Kl=${DELTA_E_KL} Kc=${DELTA_E_KC} Kh=${DELTA_E_KH}`
+    );
+
     if (delta < minDelta) {
       minDelta = delta;
       closestColor = color;
@@ -66,6 +78,7 @@ export function evaluateMatch(
   }
 
   const deltaE = Math.round(minDelta * 10) / 10;
+  console.log(`[match] → closest=${closestColor} deltaE=${deltaE} thresholds: good≤${DELTA_E_GOOD} ask≤${DELTA_E_ASK}`);
 
   if (minDelta <= DELTA_E_GOOD) {
     return { level: "good", message: MATCH_MESSAGES.good, deltaE, closestColor };
