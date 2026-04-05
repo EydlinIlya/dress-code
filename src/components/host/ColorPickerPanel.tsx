@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { Pipette, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useEyeDropper } from "@/hooks/useEyeDropper";
 import { isValidHex } from "@/lib/colors";
 import { MAX_COLORS } from "@/lib/constants";
@@ -32,51 +31,48 @@ export function ColorPickerPanel({ colors, onAddColor }: ColorPickerPanelProps) 
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col gap-5">
+      <div className="w-full aspect-square max-h-[280px] rounded-2xl overflow-hidden shadow-sm">
         <HexColorPicker
           color={currentColor}
           onChange={setCurrentColor}
-          style={{ width: "100%", maxWidth: 280, height: 200 }}
+          style={{ width: "100%", height: "100%" }}
         />
+      </div>
 
-        <div className="flex items-center gap-2 w-full max-w-[280px]">
-          <div className="flex items-center gap-1.5 flex-1 border rounded-md px-3 h-9 bg-background">
-            <span className="text-muted-foreground text-sm">#</span>
+      <div className="flex items-center gap-3">
+        <div className="flex-1 relative">
+          <label className="absolute -top-2.5 left-4 bg-surface-low px-1.5 text-[10px] uppercase font-bold tracking-wider text-primary z-10">
+            Hex Code
+          </label>
+          <div className="flex items-center bg-surface-lowest rounded-xl py-3.5 px-4 border border-outline-variant/20">
+            <span className="text-on-surface-variant text-sm mr-1">#</span>
             <HexColorInput
               color={currentColor}
               onChange={setCurrentColor}
-              className="flex-1 bg-transparent text-sm outline-none uppercase font-mono"
+              className="flex-1 bg-transparent text-sm outline-none uppercase font-mono text-on-surface"
               prefixed={false}
             />
           </div>
-
-          {eyeDropperSupported && (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleEyeDropper}
-              title="Pick color from screen"
-            >
-              <Pipette className="h-4 w-4" />
-            </Button>
-          )}
         </div>
 
-        <div className="flex items-center gap-2 w-full max-w-[280px]">
-          <div
-            className="w-9 h-9 rounded-md border shrink-0"
-            style={{ backgroundColor: currentColor }}
-          />
-          <Button
-            onClick={handleAdd}
-            disabled={colors.length >= MAX_COLORS}
-            className="flex-1"
+        {eyeDropperSupported && (
+          <button
+            onClick={handleEyeDropper}
+            className="w-14 h-14 flex items-center justify-center rounded-xl border border-outline-variant/20 bg-surface-lowest text-on-surface-variant hover:bg-surface-high transition-colors"
+            title="Pick color from screen"
           >
-            <Plus className="h-4 w-4 mr-1" />
-            Add Color
-          </Button>
-        </div>
+            <Pipette className="h-5 w-5" />
+          </button>
+        )}
+
+        <button
+          onClick={handleAdd}
+          disabled={colors.length >= MAX_COLORS}
+          className="soul-gradient text-on-primary w-14 h-14 flex items-center justify-center rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+        >
+          <Plus className="h-5 w-5" />
+        </button>
       </div>
     </div>
   );

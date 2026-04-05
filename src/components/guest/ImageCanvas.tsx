@@ -32,9 +32,9 @@ export function ImageCanvas({ canvasRef, onSample }: ImageCanvasProps) {
         ref={canvasRef}
         onClick={handleClick}
         onTouchEnd={handleTouch}
-        className="max-w-full rounded-lg cursor-crosshair border mx-auto block"
+        className="max-w-full rounded-2xl cursor-crosshair border border-outline-variant/20 mx-auto block shadow-sm"
       />
-      <p className="text-xs text-muted-foreground text-center mt-2">
+      <p className="text-xs text-on-surface-variant/60 text-center mt-3">
         Tap or click on your outfit to sample its color
       </p>
     </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { getSuggestions } from "@/lib/colors";
-import { ColorSwatch } from "@/components/shared/ColorSwatch";
 import type { ColorSuggestions as ColorSuggestionsType } from "@/types";
 
 interface ColorSuggestionsProps {
@@ -22,21 +21,24 @@ export function ColorSuggestions({ baseColor, onSelect }: ColorSuggestionsProps)
   const suggestions = getSuggestions(baseColor);
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-medium text-muted-foreground">
-        Suggested colors based on your pick
+    <div>
+      <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg mb-6">
+        Suggestions
       </h3>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="space-y-4">
         {(Object.keys(labels) as (keyof ColorSuggestionsType)[]).map((key) => (
-          <div key={key} className="space-y-1.5">
-            <span className="text-xs text-muted-foreground">{labels[key]}</span>
-            <div className="flex gap-1.5">
+          <div key={key} className="bg-surface-low rounded-2xl p-5">
+            <p className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 mb-4">
+              {labels[key]}
+            </p>
+            <div className="flex gap-3">
               {suggestions[key].map((color) => (
-                <ColorSwatch
+                <button
                   key={color}
-                  color={color}
-                  size="sm"
                   onClick={() => onSelect(color)}
+                  className="w-10 h-10 rounded-full shadow-sm hover:scale-110 active:scale-95 transition-transform"
+                  style={{ backgroundColor: color }}
+                  aria-label={`Add ${color}`}
                 />
               ))}
             </div>

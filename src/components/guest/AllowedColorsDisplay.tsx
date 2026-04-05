@@ -1,22 +1,23 @@
 "use client";
 
-import { ColorSwatch } from "@/components/shared/ColorSwatch";
-
 interface AllowedColorsDisplayProps {
   colors: string[];
 }
 
 export function AllowedColorsDisplay({ colors }: AllowedColorsDisplayProps) {
   return (
-    <div className="space-y-2">
-      <h3 className="text-sm font-medium text-muted-foreground">
-        Accepted dress code colors
-      </h3>
-      <div className="flex flex-wrap gap-2 justify-center">
+    <div className="p-6 bg-surface-low rounded-[1.5rem]">
+      <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant block mb-6">
+        Host&apos;s Palette
+      </span>
+      <div className="flex items-center gap-6 justify-center">
         {colors.map((color, i) => (
-          <div key={`${color}-${i}`} className="text-center">
-            <ColorSwatch color={color} size="md" />
-            <span className="text-[10px] text-muted-foreground font-mono block mt-0.5">
+          <div key={`${color}-${i}`} className="flex flex-col items-center gap-3">
+            <div
+              className="w-16 h-16 rounded-full shadow-[inset_0px_2px_4px_rgba(0,0,0,0.1)]"
+              style={{ backgroundColor: color }}
+            />
+            <span className="text-xs font-medium font-mono text-on-surface-variant">
               {color.toUpperCase()}
             </span>
           </div>

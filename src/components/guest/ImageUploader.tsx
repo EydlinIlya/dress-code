@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { Upload, Camera } from "lucide-react";
+import { Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ImageUploaderProps {
@@ -49,11 +49,14 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
       onDrop={handleDrop}
       onClick={() => inputRef.current?.click()}
       className={cn(
-        "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
-        dragOver
-          ? "border-primary bg-primary/5"
-          : "border-muted-foreground/25 hover:border-primary/50"
+        "relative h-[320px] flex flex-col items-center justify-center p-8 rounded-[1.5rem] cursor-pointer group transition-all",
+        "bg-surface-lowest",
+        dragOver ? "bg-primary-container/30" : "hover:bg-surface-low"
       )}
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='24' ry='24' stroke='%23afb3b066' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e")`,
+        borderRadius: "1.5rem",
+      }}
     >
       <input
         ref={inputRef}
@@ -62,18 +65,15 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
         onChange={handleChange}
         className="hidden"
       />
-      <div className="flex flex-col items-center gap-3">
-        <div className="flex gap-2">
-          <Upload className="h-8 w-8 text-muted-foreground" />
-          <Camera className="h-8 w-8 text-muted-foreground" />
-        </div>
-        <div>
-          <p className="font-medium">Upload a photo of your outfit</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Drag & drop, click to browse, or take a photo
-          </p>
-        </div>
+      <div className="w-20 h-20 rounded-full bg-primary-container flex items-center justify-center mb-6 transition-transform duration-300 group-active:scale-95">
+        <Camera className="h-9 w-9 text-on-primary-container" />
       </div>
+      <h3 className="font-[family-name:var(--font-heading)] text-lg font-semibold text-on-surface mb-2">
+        Upload Photo
+      </h3>
+      <p className="text-sm text-on-surface-variant text-center px-4">
+        Tap to open camera or browse gallery
+      </p>
     </div>
   );
 }

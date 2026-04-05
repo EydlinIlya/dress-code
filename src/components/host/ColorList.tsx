@@ -1,7 +1,6 @@
 "use client";
 
 import { X } from "lucide-react";
-import { ColorSwatch } from "@/components/shared/ColorSwatch";
 
 interface ColorListProps {
   colors: string[];
@@ -11,25 +10,38 @@ interface ColorListProps {
 export function ColorList({ colors, onRemove }: ColorListProps) {
   if (colors.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground text-center py-4">
-        No colors added yet. Pick a color and click &quot;Add Color&quot;.
-      </p>
+      <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2">
+        {/* Empty slot placeholder */}
+        <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-outline-variant/30 flex items-center justify-center shrink-0">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-outline-variant/40">
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor" opacity="0.3"/>
+            <circle cx="7.5" cy="11.5" r="1.5" fill="currentColor" opacity="0.3"/>
+            <circle cx="12" cy="7.5" r="1.5" fill="currentColor" opacity="0.3"/>
+            <circle cx="16.5" cy="11.5" r="1.5" fill="currentColor" opacity="0.3"/>
+          </svg>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap gap-3 justify-center">
+    <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2">
       {colors.map((color, i) => (
-        <div key={`${color}-${i}`} className="relative group">
-          <ColorSwatch color={color} size="lg" />
-          <button
-            onClick={() => onRemove(i)}
-            className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
-            aria-label={`Remove color ${color}`}
-          >
-            <X className="h-3 w-3" />
-          </button>
-          <span className="text-[10px] text-muted-foreground font-mono block text-center mt-1">
+        <div key={`${color}-${i}`} className="flex flex-col items-center gap-3 shrink-0">
+          <div className="relative group">
+            <div
+              className="w-20 h-20 rounded-2xl shadow-[inset_0px_2px_4px_rgba(0,0,0,0.1)]"
+              style={{ backgroundColor: color }}
+            />
+            <button
+              onClick={() => onRemove(i)}
+              className="absolute -top-2 -right-2 w-6 h-6 bg-error text-on-error rounded-full flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-all shadow-sm hover:scale-110"
+              aria-label={`Remove color ${color}`}
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <span className="font-mono text-[10px] text-on-surface-variant">
             {color.toUpperCase()}
           </span>
         </div>

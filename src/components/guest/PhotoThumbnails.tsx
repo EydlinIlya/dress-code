@@ -16,16 +16,16 @@ export function PhotoThumbnails({
   if (photos.length <= 1) return null;
 
   return (
-    <div className="flex gap-2 overflow-x-auto py-2">
+    <div className="flex gap-3 overflow-x-auto py-2">
       {photos.map((photo, i) => (
         <button
           key={photo.url}
           onClick={() => onSelect(i)}
           className={cn(
-            "w-16 h-16 rounded-md overflow-hidden border-2 shrink-0 transition-all",
+            "w-16 h-16 rounded-xl overflow-hidden shrink-0 transition-all",
             i === activeIndex
-              ? "border-primary ring-2 ring-primary/30"
-              : "border-border hover:border-primary/50"
+              ? "ring-2 ring-primary shadow-sm"
+              : "border border-outline-variant/20 hover:border-primary/40"
           )}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
