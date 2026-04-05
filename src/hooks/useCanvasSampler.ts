@@ -10,17 +10,9 @@ export function useCanvasSampler() {
   const [sampledPoint, setSampledPoint] = useState<SampledPoint | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const objectUrlRef = useRef<string | null>(null);
 
-  const loadImage = useCallback((file: File) => {
-    // Revoke previous Object URL to prevent memory leak
-    if (objectUrlRef.current) {
-      URL.revokeObjectURL(objectUrlRef.current);
-    }
-
+  const loadImage = useCallback((src: string) => {
     const img = new Image();
-    const url = URL.createObjectURL(file);
-    objectUrlRef.current = url;
 
     img.onload = () => {
       const canvas = canvasRef.current;
@@ -47,16 +39,7 @@ export function useCanvasSampler() {
       setImageLoaded(false);
     };
 
-    img.src = url;
-  }, []);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current);
-      }
-    };
+    img.src = src;
   }, []);
 
   const sampleAt = useCallback(
@@ -110,16 +93,13 @@ export function useCanvasSampler() {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
     if (sampledPoint) {
-      const displayX = sampledPoint.x;
-      const displayY = sampledPoint.y;
-
       ctx.beginPath();
-      ctx.arc(displayX, displayY, 12, 0, Math.PI * 2);
+      ctx.arc(sampledPoint.x, sampledPoint.y, 12, 0, Math.PI * 2);
       ctx.strokeStyle = "white";
       ctx.lineWidth = 3;
       ctx.stroke();
       ctx.beginPath();
-      ctx.arc(displayX, displayY, 12, 0, Math.PI * 2);
+      ctx.arc(sampledPoint.x, sampledPoint.y, 12, 0, Math.PI * 2);
       ctx.strokeStyle = "black";
       ctx.lineWidth = 1;
       ctx.stroke();

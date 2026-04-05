@@ -84,7 +84,7 @@ export default function SharePage({
             Your name <span className="text-on-surface-variant/60">(optional)</span>
           </label>
           <p className="text-xs text-on-surface-variant mb-3">
-            Guests will see &quot;{hostName.trim() || "You"} invites you to check your outfit&quot;
+            Guests will see &quot;{hostName.trim() || "You"} {hostName.trim() && (hostName.toLowerCase().includes(" & ") || hostName.toLowerCase().includes(" and ") || hostName.includes(",")) ? "invite" : "invites"} you to check your outfit&quot;
           </p>
           <input
             type="text"
