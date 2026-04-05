@@ -29,7 +29,7 @@ export default function HostPage() {
   return (
     <div className="flex flex-col min-h-full">
       <Header />
-      <main className="flex-1 pt-4 pb-16 px-6 max-w-6xl mx-auto w-full">
+      <main className="flex-1 pt-4 pb-24 lg:pb-16 px-6 max-w-6xl mx-auto w-full">
         {/* Hero */}
         <section className="mb-12 max-w-xl">
           <h2 className="text-4xl md:text-5xl leading-[1.1] font-[family-name:var(--font-heading)] font-medium tracking-tight text-on-surface mb-4">
@@ -63,7 +63,7 @@ export default function HostPage() {
             </section>
           </div>
 
-          {/* Right column: Suggestions */}
+          {/* Right column: Suggestions + Desktop Continue */}
           <div className="flex-1 min-w-0">
             {lastColor && (
               <section>
@@ -73,22 +73,35 @@ export default function HostPage() {
                 />
               </section>
             )}
+
+            {/* Desktop Continue button */}
+            {colors.length > 0 && (
+              <div className="hidden lg:flex mt-10 justify-start">
+                <a
+                  href={generateSharePageUrl(colors)}
+                  className="soul-gradient text-on-primary font-semibold py-4 px-8 rounded-xl flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all text-lg"
+                >
+                  Continue
+                  <ArrowRight className="h-5 w-5" />
+                </a>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Continue button */}
-        {colors.length > 0 && (
-          <div className="mt-12 flex justify-center">
-            <a
-              href={generateSharePageUrl(colors)}
-              className="soul-gradient text-on-primary font-semibold py-4 px-8 rounded-xl flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all text-lg"
-            >
-              Continue
-              <ArrowRight className="h-5 w-5" />
-            </a>
-          </div>
-        )}
       </main>
+
+      {/* Mobile: sticky Continue button */}
+      {colors.length > 0 && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-4 py-3 bg-background/90 backdrop-blur-md border-t border-outline-variant/20 safe-bottom">
+          <a
+            href={generateSharePageUrl(colors)}
+            className="soul-gradient text-on-primary font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all w-full"
+          >
+            Continue
+            <ArrowRight className="h-5 w-5" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

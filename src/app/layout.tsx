@@ -19,9 +19,21 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://codedress.vercel.app"),
   title: "Dress Code – Check Your Outfit Colors",
   description:
     "Easily verify if your dress matches the event color code. Pick colors, share a link, and let guests check their outfits.",
+  openGraph: {
+    title: "Dress Code",
+    description: "Check if your outfit matches the event palette.",
+    siteName: "Dress Code",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dress Code",
+    description: "Check if your outfit matches the event palette.",
+  },
 };
 
 export default function RootLayout({
