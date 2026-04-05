@@ -4,7 +4,7 @@ import { use, useMemo, useState } from "react";
 import { ArrowLeft, Link, Check, Copy } from "lucide-react";
 import { Header } from "@/components/shared/Header";
 import { StrictnessSelector } from "@/components/host/StrictnessSelector";
-import { parseColorsFromUrl, generateShareUrl } from "@/lib/colors";
+import { parseColorsFromUrl, generateShareUrl, encodeShareData } from "@/lib/colors";
 import { useClipboard } from "@/hooks/useClipboard";
 import { MAX_NAME_LENGTH } from "@/lib/constants";
 import { notFound } from "next/navigation";
@@ -35,10 +35,8 @@ export default function SharePage({
   }
 
   const basePath = generateShareUrl(allowedColors);
-  const queryParams = new URLSearchParams();
-  if (hostName.trim()) queryParams.set("name", hostName.trim());
-  if (strictness !== "default") queryParams.set("s", strictness);
-  const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
+  const encoded = encodeShareData(hostName.trim(), strictness);
+  const queryString = encoded ? `?d=${encoded}` : "";
   const fullUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}${basePath}${queryString}`
@@ -76,11 +74,11 @@ export default function SharePage({
               <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant block mb-5">
                 Your Palette
               </span>
-              <div className="flex flex-wrap gap-5 justify-center">
+              <div className="grid grid-cols-4 gap-4 justify-items-center">
                 {allowedColors.map((color, i) => (
                   <div key={`${color}-${i}`} className="flex flex-col items-center gap-2">
                     <div
-                      className="w-16 h-16 rounded-2xl shadow-[inset_0px_2px_4px_rgba(0,0,0,0.1)]"
+                      className="w-14 h-14 rounded-2xl shadow-[inset_0px_2px_4px_rgba(0,0,0,0.1)]"
                       style={{ backgroundColor: color }}
                     />
                     <span className="font-mono text-[10px] text-on-surface-variant">

@@ -10,7 +10,7 @@ import { ImageUploader } from "@/components/guest/ImageUploader";
 import { ImageCanvas } from "@/components/guest/ImageCanvas";
 import { MatchResult } from "@/components/guest/MatchResult";
 import { PhotoThumbnails } from "@/components/guest/PhotoThumbnails";
-import { parseColorsFromUrl, sanitizeName, parseStrictness } from "@/lib/colors";
+import { parseColorsFromUrl, sanitizeName, parseStrictness, decodeShareData } from "@/lib/colors";
 import { useCanvasSampler } from "@/hooks/useCanvasSampler";
 import { useEyeDropper } from "@/hooks/useEyeDropper";
 import { PLAYFUL_LINES } from "@/lib/constants";
@@ -34,9 +34,12 @@ export default function GuestPage({
 }) {
   const { colors: colorsParam } = use(params);
   const searchParams = useSearchParams();
-  const rawName = searchParams.get("name");
+  // Support both encoded `d` param and legacy `name`/`s` params
+  const dParam = searchParams.get("d");
+  const decoded = decodeShareData(dParam);
+  const rawName = decoded.name ?? searchParams.get("name");
   const hostName = rawName ? sanitizeName(rawName) : null;
-  const strictness: Strictness = parseStrictness(searchParams.get("s"));
+  const strictness: Strictness = decoded.strictness !== "default" ? decoded.strictness : parseStrictness(searchParams.get("s"));
 
   const allowedColors = useMemo(
     () => parseColorsFromUrl(colorsParam),

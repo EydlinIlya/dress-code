@@ -55,6 +55,28 @@ export function parseStrictness(param: string | null): Strictness {
   return "default";
 }
 
+/** Encode name + strictness into an opaque base64 query param */
+export function encodeShareData(name: string, strictness: Strictness): string {
+  const payload: Record<string, string> = {};
+  if (name) payload.n = name;
+  if (strictness !== "default") payload.s = strictness;
+  if (Object.keys(payload).length === 0) return "";
+  return btoa(JSON.stringify(payload));
+}
+
+/** Decode the opaque `d` query param back to name + strictness */
+export function decodeShareData(encoded: string | null): { name: string | null; strictness: Strictness } {
+  if (!encoded) return { name: null, strictness: "default" };
+  try {
+    const json = JSON.parse(atob(encoded));
+    const name = typeof json.n === "string" ? sanitizeName(json.n) : null;
+    const strictness = parseStrictness(typeof json.s === "string" ? json.s : null);
+    return { name, strictness };
+  } catch {
+    return { name: null, strictness: "default" };
+  }
+}
+
 export function evaluateMatch(
   sampleHex: string,
   allowedColors: string[],
