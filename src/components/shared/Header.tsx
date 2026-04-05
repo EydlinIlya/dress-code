@@ -2,7 +2,7 @@
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
+    <header className="w-full z-50 bg-background">
       <div className="flex items-center px-6 py-4 max-w-5xl mx-auto">
         <a href="/" className="flex items-center gap-3">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-primary">
