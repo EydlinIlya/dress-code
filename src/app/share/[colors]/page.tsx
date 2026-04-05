@@ -8,6 +8,11 @@ import { useClipboard } from "@/hooks/useClipboard";
 import { MAX_NAME_LENGTH } from "@/lib/constants";
 import { notFound } from "next/navigation";
 
+function isPlural(name: string): boolean {
+  const lower = name.toLowerCase();
+  return lower.includes(" & ") || lower.includes(" and ") || lower.includes(", ");
+}
+
 export default function SharePage({
   params,
 }: {
@@ -84,7 +89,9 @@ export default function SharePage({
             Your name <span className="text-on-surface-variant/60">(optional)</span>
           </label>
           <p className="text-xs text-on-surface-variant mb-3">
-            Guests will see &quot;{hostName.trim() || "You"} {hostName.trim() && (hostName.toLowerCase().includes(" & ") || hostName.toLowerCase().includes(" and ") || hostName.includes(",")) ? "invite" : "invites"} you to check your outfit&quot;
+            Guests will see &quot;{hostName.trim()
+              ? `${hostName.trim()} ${isPlural(hostName) ? "invite" : "invites"}`
+              : "You\u2019re invited to an event with a dress code"}&quot;
           </p>
           <input
             type="text"

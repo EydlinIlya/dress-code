@@ -59,21 +59,22 @@ export function ColorPickerPanel({ colors, onAddColor }: ColorPickerPanelProps) 
         {eyeDropperSupported && (
           <button
             onClick={handleEyeDropper}
-            className="w-14 h-14 flex items-center justify-center rounded-xl border border-outline-variant/20 bg-surface-lowest text-on-surface-variant hover:bg-surface-high transition-colors"
+            className="w-14 h-14 flex items-center justify-center rounded-xl border border-outline-variant/20 bg-surface-lowest text-on-surface-variant hover:bg-surface-high transition-colors shrink-0"
             title="Pick color from screen"
           >
             <Pipette className="h-5 w-5" />
           </button>
         )}
-
-        <button
-          onClick={handleAdd}
-          disabled={colors.length >= MAX_COLORS}
-          className="soul-gradient text-on-primary w-14 h-14 flex items-center justify-center rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
-        >
-          <Plus className="h-5 w-5" />
-        </button>
       </div>
+
+      <button
+        onClick={handleAdd}
+        disabled={colors.length >= MAX_COLORS}
+        className="w-full soul-gradient text-on-primary h-14 flex items-center justify-center gap-2 rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-40 font-semibold"
+      >
+        <Plus className="h-5 w-5" />
+        Add Color
+      </button>
     </div>
   );
 }
