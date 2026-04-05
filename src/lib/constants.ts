@@ -1,5 +1,5 @@
-export const DELTA_E_GOOD = 12;
-export const DELTA_E_ASK = 20;
+export const DELTA_E_GOOD = 16;
+export const DELTA_E_ASK = 24;
 
 // CIEDE2000 weighting factors — tune these to prioritize different dimensions
 export const DELTA_E_KL = 0.7; // lightness — forgiving on brightness (low-light photos)
