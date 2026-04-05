@@ -19,7 +19,7 @@ export function PhotoThumbnails({
     <div className="flex gap-3 overflow-x-auto py-2">
       {photos.map((photo, i) => (
         <button
-          key={photo.url}
+          key={i}
           onClick={() => onSelect(i)}
           className={cn(
             "w-16 h-16 rounded-xl overflow-hidden shrink-0 transition-all",

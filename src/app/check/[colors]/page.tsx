@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { use, useState, useMemo } from "react";
 import { Plus, Pipette } from "lucide-react";
 import { notFound } from "next/navigation";
 import { useSearchParams } from "next/navigation";
@@ -43,46 +43,29 @@ export default function GuestPage({
 
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
-  const photosRef = useRef<Photo[]>([]);
   const { canvasRef, sampledPoint, imageLoaded, loadImage, sampleAt, setSampledPoint } =
     useCanvasSampler();
   const { supported: eyeDropperSupported, pickColor } = useEyeDropper();
 
-  // Keep ref in sync with state
-  useEffect(() => {
-    photosRef.current = photos;
-  }, [photos]);
+  function handleUpload(file: File) {
+    const url = URL.createObjectURL(file);
+    setPhotos((prev) => [...prev, { file, url }]);
+    setActivePhotoIndex(photos.length);
+    loadImage(file);
+  }
 
-  const handleUpload = useCallback(
-    (file: File) => {
-      const url = URL.createObjectURL(file);
-      setPhotos((prev) => {
-        const next = [...prev, { file, url }];
-        setActivePhotoIndex(next.length - 1);
-        return next;
-      });
-      loadImage(file);
-    },
-    [loadImage]
-  );
+  function handleSelectPhoto(index: number) {
+    if (index < 0 || index >= photos.length) return;
+    setActivePhotoIndex(index);
+    loadImage(photos[index].file);
+  }
 
-  // Use ref to avoid stale closure
-  const handleSelectPhoto = useCallback(
-    (index: number) => {
-      const currentPhotos = photosRef.current;
-      if (index < 0 || index >= currentPhotos.length) return;
-      setActivePhotoIndex(index);
-      loadImage(currentPhotos[index].file);
-    },
-    [loadImage]
-  );
-
-  const handleEyeDropper = useCallback(async () => {
+  async function handleEyeDropper() {
     const color = await pickColor();
     if (color) {
       setSampledPoint({ x: 0, y: 0, color } as SampledPoint);
     }
-  }, [pickColor, setSampledPoint]);
+  }
 
   if (allowedColors.length === 0) {
     notFound();
