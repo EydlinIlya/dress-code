@@ -1,5 +1,6 @@
 "use client";
 
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { STRICTNESS_PRESETS } from "@/lib/constants";
 import type { Strictness } from "@/types";
@@ -9,10 +10,28 @@ interface StrictnessSelectorProps {
   onChange: (value: Strictness) => void;
 }
 
-const options: { key: Strictness; color: string; activeColor: string; dotColor: string }[] = [
-  { key: "strict", color: "bg-amber-100", activeColor: "bg-amber-200 ring-2 ring-amber-400", dotColor: "bg-amber-500" },
-  { key: "default", color: "bg-emerald-100", activeColor: "bg-emerald-200 ring-2 ring-emerald-400", dotColor: "bg-emerald-500" },
-  { key: "relaxed", color: "bg-sky-100", activeColor: "bg-sky-200 ring-2 ring-sky-400", dotColor: "bg-sky-500" },
+const options: { key: Strictness; accent: string; activeBg: string; checkBg: string; inactiveBg: string }[] = [
+  {
+    key: "strict",
+    accent: "border-amber-400",
+    activeBg: "bg-amber-50",
+    checkBg: "bg-amber-500",
+    inactiveBg: "bg-surface-lowest",
+  },
+  {
+    key: "default",
+    accent: "border-emerald-400",
+    activeBg: "bg-emerald-50",
+    checkBg: "bg-emerald-500",
+    inactiveBg: "bg-surface-lowest",
+  },
+  {
+    key: "relaxed",
+    accent: "border-sky-400",
+    activeBg: "bg-sky-50",
+    checkBg: "bg-sky-500",
+    inactiveBg: "bg-surface-lowest",
+  },
 ];
 
 export function StrictnessSelector({ value, onChange }: StrictnessSelectorProps) {
@@ -22,8 +41,7 @@ export function StrictnessSelector({ value, onChange }: StrictnessSelectorProps)
         How strict?
       </span>
 
-      {/* Gradient track */}
-      <div className="relative flex rounded-2xl overflow-hidden border border-outline-variant/20">
+      <div className="grid grid-cols-3 gap-3">
         {options.map((opt) => {
           const preset = STRICTNESS_PRESETS[opt.key];
           const active = value === opt.key;
@@ -32,14 +50,22 @@ export function StrictnessSelector({ value, onChange }: StrictnessSelectorProps)
               key={opt.key}
               onClick={() => onChange(opt.key)}
               className={cn(
-                "flex-1 py-4 px-3 flex flex-col items-center gap-1.5 transition-all relative",
-                active ? opt.activeColor : opt.color,
-                "hover:brightness-95"
+                "relative rounded-2xl p-4 flex flex-col items-center gap-2 transition-all border-2",
+                active
+                  ? `${opt.activeBg} ${opt.accent} shadow-sm`
+                  : `${opt.inactiveBg} border-outline-variant/20 hover:border-outline-variant/40 opacity-60 hover:opacity-80`
               )}
             >
-              <div className={cn("w-3 h-3 rounded-full transition-transform", opt.dotColor, active && "scale-125")} />
+              {/* Checkmark badge */}
+              <div className={cn(
+                "w-6 h-6 rounded-full flex items-center justify-center transition-all",
+                active ? `${opt.checkBg} scale-100` : "bg-outline-variant/20 scale-90"
+              )}>
+                {active && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+              </div>
+
               <span className={cn(
-                "text-sm font-semibold font-[family-name:var(--font-heading)]",
+                "text-sm font-semibold font-[family-name:var(--font-heading)] text-center leading-tight",
                 active ? "text-on-surface" : "text-on-surface-variant"
               )}>
                 {preset.label}
