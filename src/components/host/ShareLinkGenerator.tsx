@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Link, Check, Copy } from "lucide-react";
 import { generateShareUrl } from "@/lib/colors";
 import { useClipboard } from "@/hooks/useClipboard";
@@ -10,6 +11,19 @@ interface ShareLinkGeneratorProps {
 
 export function ShareLinkGenerator({ colors }: ShareLinkGeneratorProps) {
   const { copied, copy } = useClipboard();
+  const ref = useRef<HTMLElement>(null);
+  const prevCount = useRef(colors.length);
+
+  // Auto-scroll into view on mobile when share link first appears or colors change
+  useEffect(() => {
+    if (colors.length > 0 && colors.length !== prevCount.current) {
+      prevCount.current = colors.length;
+      // Only auto-scroll on narrow screens (mobile)
+      if (window.innerWidth < 1024 && ref.current) {
+        ref.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }, [colors.length]);
 
   if (colors.length === 0) return null;
 
@@ -20,7 +34,10 @@ export function ShareLinkGenerator({ colors }: ShareLinkGeneratorProps) {
       : path;
 
   return (
-    <section className="bg-surface-lowest rounded-[2rem] p-8 shadow-[0px_10px_30px_rgba(47,51,49,0.05)] border border-outline-variant/10">
+    <section
+      ref={ref}
+      className="bg-surface-lowest rounded-[2rem] p-8 shadow-[0px_10px_30px_rgba(47,51,49,0.05)] border border-outline-variant/10 lg:sticky lg:top-24"
+    >
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-primary/10 rounded-lg">
           <Link className="h-5 w-5 text-primary" />

@@ -121,7 +121,7 @@ export default function GuestPage({
                   activeIndex={activePhotoIndex}
                   onSelect={handleSelectPhoto}
                 />
-                <ImageCanvas canvasRef={canvasRef} onSample={sampleAt} />
+                <ImageCanvas canvasRef={canvasRef} onSample={sampleAt} hasSampled={!!sampledPoint} />
                 <div className="flex justify-center">
                   <button
                     onClick={() =>

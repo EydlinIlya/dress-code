@@ -11,7 +11,6 @@ export function ColorList({ colors, onRemove }: ColorListProps) {
   if (colors.length === 0) {
     return (
       <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2">
-        {/* Empty slot placeholder */}
         <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-outline-variant/30 flex items-center justify-center shrink-0">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-outline-variant/40">
             <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor" opacity="0.3"/>
@@ -25,7 +24,7 @@ export function ColorList({ colors, onRemove }: ColorListProps) {
   }
 
   return (
-    <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2">
+    <div className="flex gap-6 overflow-x-auto pb-4 px-2">
       {colors.map((color, i) => (
         <div key={`${color}-${i}`} className="flex flex-col items-center gap-3 shrink-0">
           <div className="relative group">
@@ -35,10 +34,10 @@ export function ColorList({ colors, onRemove }: ColorListProps) {
             />
             <button
               onClick={() => onRemove(i)}
-              className="absolute -top-2 -right-2 w-6 h-6 bg-error text-on-error rounded-full flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-all shadow-sm hover:scale-110"
+              className="absolute top-1 right-1 w-6 h-6 bg-black/40 backdrop-blur-sm text-white rounded-full flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-all hover:bg-black/60"
               aria-label={`Remove color ${color}`}
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-3 w-3" />
             </button>
           </div>
           <span className="font-mono text-[10px] text-on-surface-variant">

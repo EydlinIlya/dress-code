@@ -28,7 +28,7 @@ export default function HostPage() {
   return (
     <div className="flex flex-col min-h-full">
       <Header />
-      <main className="flex-1 pt-4 pb-16 px-6 max-w-5xl mx-auto w-full">
+      <main className="flex-1 pt-4 pb-16 px-6 max-w-6xl mx-auto w-full">
         {/* Hero */}
         <section className="mb-12 max-w-xl">
           <h2 className="text-4xl md:text-5xl leading-[1.1] font-[family-name:var(--font-heading)] font-medium tracking-tight text-on-surface mb-4">
@@ -39,7 +39,7 @@ export default function HostPage() {
           </p>
         </section>
 
-        {/* Desktop: two-column layout */}
+        {/* Desktop: three-column layout */}
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Left column: Picker + Palette */}
           <div className="space-y-10 lg:w-[400px] shrink-0">
@@ -62,8 +62,8 @@ export default function HostPage() {
             </section>
           </div>
 
-          {/* Right column: Suggestions + Share */}
-          <div className="flex-1 space-y-10 min-w-0">
+          {/* Middle column: Suggestions */}
+          <div className="flex-1 min-w-0">
             {lastColor && (
               <section>
                 <ColorSuggestions
@@ -72,11 +72,14 @@ export default function HostPage() {
                 />
               </section>
             )}
-
-            {colors.length > 0 && (
-              <ShareLinkGenerator colors={colors} />
-            )}
           </div>
+
+          {/* Right column: Share link */}
+          {colors.length > 0 && (
+            <div className="lg:w-[300px] shrink-0">
+              <ShareLinkGenerator colors={colors} />
+            </div>
+          )}
         </div>
       </main>
     </div>
