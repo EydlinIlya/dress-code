@@ -3,11 +3,13 @@
 import { CircleCheck, CircleAlert, CircleX } from "lucide-react";
 import { evaluateMatch } from "@/lib/colors";
 import { cn } from "@/lib/utils";
+import type { Strictness } from "@/types";
 
 interface MatchResultProps {
   sampledColor: string;
   allowedColors: string[];
   variant?: "card" | "sticky";
+  strictness?: Strictness;
 }
 
 const config = {
@@ -34,8 +36,8 @@ const config = {
   },
 };
 
-export function MatchResult({ sampledColor, allowedColors, variant = "card" }: MatchResultProps) {
-  const result = evaluateMatch(sampledColor, allowedColors);
+export function MatchResult({ sampledColor, allowedColors, variant = "card", strictness = "default" }: MatchResultProps) {
+  const result = evaluateMatch(sampledColor, allowedColors, strictness);
   const { level, message, closestColor } = result;
   const { icon: Icon, bg, text, border, swatchRing } = config[level];
 

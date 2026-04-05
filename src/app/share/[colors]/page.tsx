@@ -3,10 +3,12 @@
 import { use, useMemo, useState } from "react";
 import { ArrowLeft, Link, Check, Copy } from "lucide-react";
 import { Header } from "@/components/shared/Header";
+import { StrictnessSelector } from "@/components/host/StrictnessSelector";
 import { parseColorsFromUrl, generateShareUrl } from "@/lib/colors";
 import { useClipboard } from "@/hooks/useClipboard";
 import { MAX_NAME_LENGTH } from "@/lib/constants";
 import { notFound } from "next/navigation";
+import type { Strictness } from "@/types";
 
 function isPlural(name: string): boolean {
   const lower = name.toLowerCase();
@@ -25,6 +27,7 @@ export default function SharePage({
   );
 
   const [hostName, setHostName] = useState("");
+  const [strictness, setStrictness] = useState<Strictness>("default");
   const { copied, copy } = useClipboard();
 
   if (allowedColors.length === 0) {
@@ -32,13 +35,14 @@ export default function SharePage({
   }
 
   const basePath = generateShareUrl(allowedColors);
-  const nameParam = hostName.trim()
-    ? `?name=${encodeURIComponent(hostName.trim())}`
-    : "";
+  const queryParams = new URLSearchParams();
+  if (hostName.trim()) queryParams.set("name", hostName.trim());
+  if (strictness !== "default") queryParams.set("s", strictness);
+  const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
   const fullUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}${basePath}${nameParam}`
-      : `${basePath}${nameParam}`;
+      ? `${window.location.origin}${basePath}${queryString}`
+      : `${basePath}${queryString}`;
 
   return (
     <div className="flex flex-col min-h-full">
@@ -100,6 +104,11 @@ export default function SharePage({
             placeholder="e.g. Emma & James"
             className="w-full bg-surface-lowest border border-outline-variant/20 rounded-xl py-3 px-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:ring-2 focus:ring-primary/30 transition-all"
           />
+        </section>
+
+        {/* Strictness */}
+        <section className="mb-8">
+          <StrictnessSelector value={strictness} onChange={setStrictness} />
         </section>
 
         {/* Share link */}

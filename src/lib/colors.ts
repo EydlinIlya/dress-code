@@ -1,14 +1,14 @@
 import chroma from "chroma-js";
 import type { MatchResult, ColorSuggestions } from "@/types";
 import {
-  DELTA_E_GOOD,
-  DELTA_E_ASK,
+  STRICTNESS_PRESETS,
   DELTA_E_KL,
   DELTA_E_KC,
   DELTA_E_KH,
   MATCH_MESSAGES,
   MAX_NAME_LENGTH,
 } from "./constants";
+import type { Strictness } from "@/types";
 
 export function parseColorsFromUrl(param: string): string[] {
   let decoded: string;
@@ -50,10 +50,17 @@ export function sanitizeName(name: string): string {
   return decoded.replace(/<[^>]*>/g, "").trim().slice(0, MAX_NAME_LENGTH);
 }
 
+export function parseStrictness(param: string | null): Strictness {
+  if (param === "strict" || param === "relaxed") return param;
+  return "default";
+}
+
 export function evaluateMatch(
   sampleHex: string,
-  allowedColors: string[]
+  allowedColors: string[],
+  strictness: Strictness = "default"
 ): MatchResult {
+  const { good: thresholdGood, ask: thresholdAsk } = STRICTNESS_PRESETS[strictness];
   let minDelta = Infinity;
   let closestColor = allowedColors[0];
 
@@ -78,12 +85,12 @@ export function evaluateMatch(
   }
 
   const deltaE = Math.round(minDelta * 10) / 10;
-  console.log(`[match] → closest=${closestColor} deltaE=${deltaE} thresholds: good≤${DELTA_E_GOOD} ask≤${DELTA_E_ASK}`);
+  console.log(`[match] → closest=${closestColor} deltaE=${deltaE} strictness=${strictness} thresholds: good≤${thresholdGood} ask≤${thresholdAsk}`);
 
-  if (minDelta <= DELTA_E_GOOD) {
+  if (minDelta <= thresholdGood) {
     return { level: "good", message: MATCH_MESSAGES.good, deltaE, closestColor };
   }
-  if (minDelta <= DELTA_E_ASK) {
+  if (minDelta <= thresholdAsk) {
     return { level: "ask", message: MATCH_MESSAGES.ask, deltaE, closestColor };
   }
   return { level: "no", message: MATCH_MESSAGES.no, deltaE, closestColor };

@@ -1,4 +1,5 @@
 export type MatchLevel = "good" | "ask" | "no";
+export type Strictness = "strict" | "default" | "relaxed";
 
 export interface MatchResult {
   level: MatchLevel;

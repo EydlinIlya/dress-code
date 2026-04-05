@@ -10,11 +10,12 @@ import { ImageUploader } from "@/components/guest/ImageUploader";
 import { ImageCanvas } from "@/components/guest/ImageCanvas";
 import { MatchResult } from "@/components/guest/MatchResult";
 import { PhotoThumbnails } from "@/components/guest/PhotoThumbnails";
-import { parseColorsFromUrl, sanitizeName } from "@/lib/colors";
+import { parseColorsFromUrl, sanitizeName, parseStrictness } from "@/lib/colors";
 import { useCanvasSampler } from "@/hooks/useCanvasSampler";
 import { useEyeDropper } from "@/hooks/useEyeDropper";
 import { PLAYFUL_LINES } from "@/lib/constants";
 import type { SampledPoint } from "@/types";
+import type { Strictness } from "@/types";
 
 interface Photo {
   file: File;
@@ -35,6 +36,7 @@ export default function GuestPage({
   const searchParams = useSearchParams();
   const rawName = searchParams.get("name");
   const hostName = rawName ? sanitizeName(rawName) : null;
+  const strictness: Strictness = parseStrictness(searchParams.get("s"));
 
   const allowedColors = useMemo(
     () => parseColorsFromUrl(colorsParam),
@@ -130,6 +132,7 @@ export default function GuestPage({
                 <MatchResult
                   sampledColor={sampledPoint.color}
                   allowedColors={allowedColors}
+                  strictness={strictness}
                 />
               </div>
             )}
@@ -201,6 +204,7 @@ export default function GuestPage({
               sampledColor={sampledPoint.color}
               allowedColors={allowedColors}
               variant="sticky"
+              strictness={strictness}
             />
           </div>
         )}
