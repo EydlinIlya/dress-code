@@ -107,7 +107,7 @@ export function GuestView({ allowedColors, hostName, strictness, guestStyle = "w
           <p style={{ color: "var(--guest-text-muted)" }} className="leading-relaxed">
             Upload a photo to see if your outfit matches.
           </p>
-          <p className="text-on-surface-variant/60 text-sm mt-2 italic">
+          <p className="text-sm mt-2 italic opacity-60" style={{ color: "var(--guest-text-muted)" }}>
             {playfulLine}
           </p>
         </section>
