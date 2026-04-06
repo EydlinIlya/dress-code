@@ -4,11 +4,12 @@ import { use, useMemo, useState } from "react";
 import { ArrowLeft, Link, Check, Copy, Eye } from "lucide-react";
 import { Header } from "@/components/shared/Header";
 import { StrictnessSelector } from "@/components/host/StrictnessSelector";
+import { StyleSelector } from "@/components/host/StyleSelector";
 import { parseColorsFromUrl, generateShareUrl, encodeShareData } from "@/lib/colors";
 import { useClipboard } from "@/hooks/useClipboard";
 import { MAX_NAME_LENGTH } from "@/lib/constants";
 import { notFound } from "next/navigation";
-import type { Strictness } from "@/types";
+import type { Strictness, GuestStyle } from "@/types";
 
 function isPlural(name: string): boolean {
   const lower = name.toLowerCase();
@@ -28,6 +29,7 @@ export default function SharePage({
 
   const [hostName, setHostName] = useState("");
   const [strictness, setStrictness] = useState<Strictness>("default");
+  const [guestStyle, setGuestStyle] = useState<GuestStyle>("classic");
   const { copied, copy } = useClipboard();
 
   if (allowedColors.length === 0) {
@@ -35,7 +37,7 @@ export default function SharePage({
   }
 
   const basePath = generateShareUrl(allowedColors);
-  const encoded = encodeShareData(hostName.trim(), strictness);
+  const encoded = encodeShareData(hostName.trim(), strictness, guestStyle);
   const queryString = encoded ? `?d=${encoded}` : "";
   const fullUrl =
     typeof window !== "undefined"
@@ -92,6 +94,11 @@ export default function SharePage({
             {/* Strictness */}
             <section>
               <StrictnessSelector value={strictness} onChange={setStrictness} />
+            </section>
+
+            {/* Guest page style */}
+            <section>
+              <StyleSelector value={guestStyle} onChange={setGuestStyle} />
             </section>
 
             {/* Optional name */}

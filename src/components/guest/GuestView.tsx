@@ -11,8 +11,9 @@ import { Header } from "@/components/shared/Header";
 import { useCanvasSampler } from "@/hooks/useCanvasSampler";
 import { useEyeDropper } from "@/hooks/useEyeDropper";
 import { PLAYFUL_LINES } from "@/lib/constants";
+import { getStyleCssVars } from "@/lib/guest-styles";
 import type { SampledPoint } from "@/types";
-import type { Strictness } from "@/types";
+import type { Strictness, GuestStyle } from "@/types";
 
 interface Photo {
   file: File;
@@ -28,10 +29,11 @@ interface GuestViewProps {
   allowedColors: string[];
   hostName: string | null;
   strictness: Strictness;
+  guestStyle?: GuestStyle;
   banner?: React.ReactNode;
 }
 
-export function GuestView({ allowedColors, hostName, strictness, banner }: GuestViewProps) {
+export function GuestView({ allowedColors, hostName, strictness, guestStyle = "classic", banner }: GuestViewProps) {
   const [playfulLine] = useState(
     () => PLAYFUL_LINES[Math.floor(Math.random() * PLAYFUL_LINES.length)]
   );
@@ -73,21 +75,35 @@ export function GuestView({ allowedColors, hostName, strictness, banner }: Guest
 
   const inviteVerb = hostName && isPlural(hostName) ? "invite" : "invites";
 
+  const isStyled = guestStyle !== "classic";
+  const styleVars = isStyled ? getStyleCssVars(guestStyle) : undefined;
+
   return (
-    <div className="flex flex-col min-h-full">
+    <div
+      className="flex flex-col min-h-full transition-colors duration-300"
+      style={isStyled ? {
+        ...styleVars,
+        backgroundColor: "var(--guest-bg)",
+        color: "var(--guest-text)",
+        fontFamily: "var(--guest-font-body)",
+      } : undefined}
+    >
       <Header />
       {banner}
       <main className="flex-1 pt-4 pb-24 px-6 max-w-5xl mx-auto w-full">
         {/* Hero with personalized greeting */}
         <section className="mb-10 max-w-xl">
-          <h2 className="text-3xl md:text-4xl leading-tight font-[family-name:var(--font-heading)] font-semibold tracking-tight text-on-surface mb-3">
+          <h2
+            className="text-3xl md:text-4xl leading-tight font-semibold tracking-tight mb-3"
+            style={isStyled ? { fontFamily: "var(--guest-font-heading)", color: "var(--guest-text)" } : undefined}
+          >
             {hostName ? (
-              <><span className="text-primary">{hostName}</span> {inviteVerb} you to check your outfit.</>
+              <><span style={isStyled ? { color: "var(--guest-text-muted)" } : undefined} className={isStyled ? undefined : "text-primary"}>{hostName}</span> {inviteVerb} you to check your outfit.</>
             ) : (
               <>You&apos;re invited to an event with a dress code.</>
             )}
           </h2>
-          <p className="text-on-surface-variant leading-relaxed">
+          <p style={isStyled ? { color: "var(--guest-text-muted)" } : undefined} className={isStyled ? "leading-relaxed" : "text-on-surface-variant leading-relaxed"}>
             Upload a photo to see if your outfit matches.
           </p>
           <p className="text-on-surface-variant/60 text-sm mt-2 italic">
