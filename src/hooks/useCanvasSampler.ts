@@ -13,6 +13,9 @@ export function useCanvasSampler() {
 
   const loadImage = useCallback((src: string) => {
     const img = new Image();
+    if (src.startsWith("http")) {
+      img.crossOrigin = "anonymous";
+    }
 
     img.onload = () => {
       const canvas = canvasRef.current;

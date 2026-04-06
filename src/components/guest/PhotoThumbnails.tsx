@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 
 interface PhotoThumbnailsProps {
-  photos: { file: File; url: string }[];
+  photos: { file?: File; url: string }[];
   activeIndex: number;
   onSelect: (index: number) => void;
 }
