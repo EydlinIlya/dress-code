@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useMemo, useState } from "react";
-import { ArrowLeft, Link, Check, Copy } from "lucide-react";
+import { ArrowLeft, Link, Check, Copy, Eye } from "lucide-react";
 import { Header } from "@/components/shared/Header";
 import { StrictnessSelector } from "@/components/host/StrictnessSelector";
 import { parseColorsFromUrl, generateShareUrl, encodeShareData } from "@/lib/colors";
@@ -150,6 +150,14 @@ export default function SharePage({
                   </>
                 )}
               </button>
+
+              <a
+                href={`/preview/${colorsParam}${queryString}`}
+                className="w-full mt-3 border border-outline-variant/30 text-on-surface font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-surface-low active:scale-[0.98] transition-all"
+              >
+                <Eye className="h-5 w-5" />
+                <span>Preview as Guest</span>
+              </a>
             </section>
           </div>
         </div>
