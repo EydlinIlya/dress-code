@@ -46,7 +46,7 @@ export function ColorSuggestions({ baseColor, onSelect }: ColorSuggestionsProps)
               />
             )}
             <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-              {suggestions ? "Matches for this" : "Presets"}
+              {suggestions ? "Matches" : "Presets"}
             </h3>
           </div>
           <ChevronDown
@@ -79,7 +79,7 @@ export function ColorSuggestions({ baseColor, onSelect }: ColorSuggestionsProps)
             />
           )}
           <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-            {suggestions ? "Matches for this" : "Presets"}
+            {suggestions ? "Matches" : "Presets"}
           </h3>
         </div>
         <div className="space-y-4">
