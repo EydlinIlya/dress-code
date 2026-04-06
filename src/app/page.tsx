@@ -17,20 +17,32 @@ function HostPageContent() {
     return c ? parseColorsFromUrl(c) : [];
   });
 
+  const [activeColorIndex, setActiveColorIndex] = useState<number | null>(
+    () => (colors.length > 0 ? colors.length - 1 : null)
+  );
+
   const handleAddColor = useCallback((color: string) => {
     setColors((prev) => {
       if (prev.includes(color)) return prev;
       if (prev.length >= MAX_COLORS) return prev;
-      return [...prev, color];
+      const next = [...prev, color];
+      setActiveColorIndex(next.length - 1);
+      return next;
     });
   }, []);
 
   const handleRemoveColor = useCallback((index: number) => {
-    setColors((prev) => prev.filter((_, i) => i !== index));
+    setColors((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      setActiveColorIndex(next.length > 0 ? Math.min(index, next.length - 1) : null);
+      return next;
+    });
   }, []);
 
   const [navigating, setNavigating] = useState(false);
-  const lastColor = colors.length > 0 ? colors[colors.length - 1] : null;
+  const activeColor = activeColorIndex !== null && activeColorIndex < colors.length
+    ? colors[activeColorIndex]
+    : null;
 
   return (
     <div className="flex flex-col min-h-full">
@@ -65,20 +77,23 @@ function HostPageContent() {
                   </span>
                 )}
               </div>
-              <ColorList colors={colors} onRemove={handleRemoveColor} />
+              <ColorList
+                colors={colors}
+                onRemove={handleRemoveColor}
+                activeIndex={activeColorIndex}
+                onSelect={setActiveColorIndex}
+              />
             </section>
           </div>
 
           {/* Right column: Suggestions + Desktop Continue */}
           <div className="flex-1 min-w-0">
-            {lastColor && (
-              <section>
-                <ColorSuggestions
-                  baseColor={lastColor}
-                  onSelect={handleAddColor}
-                />
-              </section>
-            )}
+            <section>
+              <ColorSuggestions
+                baseColor={activeColor}
+                onSelect={handleAddColor}
+              />
+            </section>
 
             {/* Desktop Continue button */}
             {colors.length > 0 && (

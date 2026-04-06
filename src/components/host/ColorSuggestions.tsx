@@ -11,7 +11,14 @@ interface ColorSuggestionsProps {
   onSelect: (color: string) => void;
 }
 
-const labels: Record<keyof ColorSuggestionsType, string> = {
+const PRESETS = [
+  { name: "Wedding", colors: ["#a8c4d6", "#c9a87c", "#f2d5d5"] },
+  { name: "St. Patrick\u2019s Day", colors: ["#2e7d32", "#ffd700"] },
+  { name: "Barcelona Game", colors: ["#a50044", "#004d98"] },
+  { name: "Monochrome", colors: ["#2c2c2c", "#6b6b6b", "#b0b0b0", "#e8e8e8"] },
+];
+
+const suggestionLabels: Record<keyof ColorSuggestionsType, string> = {
   complementary: "Complementary",
   analogous: "Analogous",
   triadic: "Triadic",
@@ -21,9 +28,7 @@ const labels: Record<keyof ColorSuggestionsType, string> = {
 export function ColorSuggestions({ baseColor, onSelect }: ColorSuggestionsProps) {
   const [open, setOpen] = useState(false);
 
-  if (!baseColor) return null;
-
-  const suggestions = getSuggestions(baseColor);
+  const suggestions = baseColor ? getSuggestions(baseColor) : null;
 
   return (
     <div>
@@ -33,9 +38,17 @@ export function ColorSuggestions({ baseColor, onSelect }: ColorSuggestionsProps)
           onClick={() => setOpen((v) => !v)}
           className="w-full flex items-center justify-between py-3 px-1"
         >
-          <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-            Suggestions
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
+              {suggestions ? "Suggestions" : "Presets"}
+            </h3>
+            {baseColor && (
+              <div
+                className="w-4 h-4 rounded-full border border-outline-variant/30 shadow-sm"
+                style={{ backgroundColor: baseColor }}
+              />
+            )}
+          </div>
           <ChevronDown
             className={cn(
               "h-5 w-5 text-on-surface-variant transition-transform",
@@ -45,23 +58,72 @@ export function ColorSuggestions({ baseColor, onSelect }: ColorSuggestionsProps)
         </button>
         {open && (
           <div className="space-y-3 animate-fade-in-up pb-2">
-            {(Object.keys(labels) as (keyof ColorSuggestionsType)[]).map((key) => (
-              <SuggestionRow key={key} label={labels[key]} colors={suggestions[key]} onSelect={onSelect} />
-            ))}
+            {suggestions
+              ? (Object.keys(suggestionLabels) as (keyof ColorSuggestionsType)[]).map((key) => (
+                  <SuggestionRow key={key} label={suggestionLabels[key]} colors={suggestions[key]} onSelect={onSelect} />
+                ))
+              : PRESETS.map((preset) => (
+                  <PresetRow key={preset.name} preset={preset} onSelect={onSelect} />
+                ))}
           </div>
         )}
       </div>
 
       {/* Desktop: always visible */}
       <div className="hidden lg:block">
-        <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg mb-6">
-          Suggestions
-        </h3>
-        <div className="space-y-4">
-          {(Object.keys(labels) as (keyof ColorSuggestionsType)[]).map((key) => (
-            <SuggestionRow key={key} label={labels[key]} colors={suggestions[key]} onSelect={onSelect} />
-          ))}
+        <div className="flex items-center gap-2 mb-6">
+          <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
+            {suggestions ? "Suggestions" : "Presets"}
+          </h3>
+          {baseColor && (
+            <div
+              className="w-4 h-4 rounded-full border border-outline-variant/30 shadow-sm"
+              style={{ backgroundColor: baseColor }}
+            />
+          )}
         </div>
+        <div className="space-y-4">
+          {suggestions
+            ? (Object.keys(suggestionLabels) as (keyof ColorSuggestionsType)[]).map((key) => (
+                <SuggestionRow key={key} label={suggestionLabels[key]} colors={suggestions[key]} onSelect={onSelect} />
+              ))
+            : PRESETS.map((preset) => (
+                <PresetRow key={preset.name} preset={preset} onSelect={onSelect} />
+              ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PresetRow({ preset, onSelect }: { preset: { name: string; colors: string[] }; onSelect: (c: string) => void }) {
+  const handleAddAll = () => {
+    for (const color of preset.colors) {
+      onSelect(color);
+    }
+  };
+
+  return (
+    <div className="bg-surface-low rounded-2xl p-5">
+      <p className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 mb-4">
+        {preset.name}
+      </p>
+      <div className="flex items-center gap-3">
+        {preset.colors.map((color) => (
+          <button
+            key={color}
+            onClick={() => onSelect(color)}
+            className="w-10 h-10 rounded-full shadow-sm hover:scale-110 active:scale-95 transition-transform"
+            style={{ backgroundColor: color }}
+            aria-label={`Add ${color}`}
+          />
+        ))}
+        <button
+          onClick={handleAddAll}
+          className="ml-auto text-xs font-medium text-on-surface-variant/60 hover:text-primary transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-high"
+        >
+          Add all
+        </button>
       </div>
     </div>
   );

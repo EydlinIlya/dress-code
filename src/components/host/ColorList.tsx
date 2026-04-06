@@ -5,9 +5,11 @@ import { X } from "lucide-react";
 interface ColorListProps {
   colors: string[];
   onRemove: (index: number) => void;
+  activeIndex?: number | null;
+  onSelect?: (index: number) => void;
 }
 
-export function ColorList({ colors, onRemove }: ColorListProps) {
+export function ColorList({ colors, onRemove, activeIndex, onSelect }: ColorListProps) {
   if (colors.length === 0) {
     return (
       <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2">
@@ -28,9 +30,11 @@ export function ColorList({ colors, onRemove }: ColorListProps) {
       {colors.map((color, i) => (
         <div key={`${color}-${i}`} className="flex flex-col items-center gap-3 shrink-0">
           <div className="relative group">
-            <div
-              className="w-20 h-20 rounded-2xl shadow-[inset_0px_2px_4px_rgba(0,0,0,0.1)]"
+            <button
+              onClick={() => onSelect?.(i)}
+              className={`w-20 h-20 rounded-2xl shadow-[inset_0px_2px_4px_rgba(0,0,0,0.1)] transition-all ${activeIndex === i ? "ring-3 ring-primary ring-offset-2" : "hover:ring-2 hover:ring-outline-variant/40 hover:ring-offset-1"}`}
               style={{ backgroundColor: color }}
+              aria-label={`Show suggestions for ${color}`}
             />
             <button
               onClick={() => onRemove(i)}
