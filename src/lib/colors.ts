@@ -60,6 +60,22 @@ export function parseGuestStyle(param: string | null): GuestStyle {
   return "wedding";
 }
 
+/** Unicode-safe base64 encode */
+function utf8ToBase64(str: string): string {
+  const bytes = new TextEncoder().encode(str);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+/** Unicode-safe base64 decode */
+function base64ToUtf8(encoded: string): string {
+  const binary = atob(encoded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
 /** Encode name + strictness + style into an opaque base64 query param */
 export function encodeShareData(name: string, strictness: Strictness, style: GuestStyle = "wedding"): string {
   const payload: Record<string, string> = {};
@@ -67,14 +83,14 @@ export function encodeShareData(name: string, strictness: Strictness, style: Gue
   if (strictness !== "default") payload.s = strictness;
   if (style !== "wedding") payload.t = style;
   if (Object.keys(payload).length === 0) return "";
-  return btoa(JSON.stringify(payload));
+  return utf8ToBase64(JSON.stringify(payload));
 }
 
 /** Decode the opaque `d` query param back to name + strictness + style */
 export function decodeShareData(encoded: string | null): { name: string | null; strictness: Strictness; style: GuestStyle } {
   if (!encoded) return { name: null, strictness: "default", style: "wedding" };
   try {
-    const json = JSON.parse(atob(encoded));
+    const json = JSON.parse(base64ToUtf8(encoded));
     const name = typeof json.n === "string" ? sanitizeName(json.n) : null;
     const strictness = parseStrictness(typeof json.s === "string" ? json.s : null);
     const style = parseGuestStyle(typeof json.t === "string" ? json.t : null);
