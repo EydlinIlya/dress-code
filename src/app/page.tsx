@@ -49,7 +49,7 @@ function HostPageContent() {
       <Header />
       <main className="flex-1 pt-4 pb-24 lg:pb-16 px-6 max-w-6xl mx-auto w-full">
         {/* Hero */}
-        <section className="mb-12 max-w-xl">
+        <section className="mb-12 max-w-3xl">
           <h2 className="text-4xl md:text-5xl leading-[1.1] font-[family-name:var(--font-heading)] font-medium tracking-tight text-on-surface mb-4">
             Create your event&apos;s dress code.
           </h2>

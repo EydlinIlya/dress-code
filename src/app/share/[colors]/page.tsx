@@ -101,24 +101,6 @@ export default function SharePage({
               <StyleSelector value={guestStyle} onChange={setGuestStyle} />
             </section>
 
-            {/* Optional name */}
-            <section>
-              <label className="block text-sm font-medium text-on-surface mb-2">
-                Your name <span className="text-on-surface-variant/60">(optional)</span>
-              </label>
-              <p className="text-xs text-on-surface-variant mb-3">
-                Guests will see &quot;{hostName.trim()
-                  ? `${hostName.trim()} ${isPlural(hostName) ? "invite" : "invites"}`
-                  : "You\u2019re invited to an event with a dress code"}&quot;
-              </p>
-              <input
-                type="text"
-                value={hostName}
-                onChange={(e) => setHostName(e.target.value.slice(0, MAX_NAME_LENGTH))}
-                placeholder="e.g. Emma & James"
-                className="w-full bg-surface-lowest border border-outline-variant/20 rounded-xl py-3 px-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-              />
-            </section>
           </div>
 
           {/* Right column: Share link (visually prominent) */}
@@ -136,6 +118,25 @@ export default function SharePage({
               <p className="text-sm text-on-surface-variant mb-6 leading-relaxed">
                 Send this link to your guests. They&apos;ll be able to upload a photo and instantly check if their outfit matches your palette.
               </p>
+
+              {/* Host name */}
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-on-surface mb-1.5">
+                  Your name <span className="text-on-surface-variant/60">(optional)</span>
+                </label>
+                <p className="text-xs text-on-surface-variant mb-2">
+                  Guests will see &quot;{hostName.trim()
+                    ? `${hostName.trim()} ${isPlural(hostName) ? "invite" : "invites"}`
+                    : "You\u2019re invited to an event with a dress code"}&quot;
+                </p>
+                <input
+                  type="text"
+                  value={hostName}
+                  onChange={(e) => setHostName(e.target.value.slice(0, MAX_NAME_LENGTH))}
+                  placeholder="e.g. Emma & James"
+                  className="w-full bg-surface-low border border-outline-variant/20 rounded-xl py-3 px-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                />
+              </div>
 
               <div className="bg-surface-low rounded-xl px-4 py-4 mb-6 font-mono text-sm text-on-surface-variant break-all select-all">
                 {fullUrl}
