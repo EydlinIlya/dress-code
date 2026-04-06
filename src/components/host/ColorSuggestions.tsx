@@ -13,7 +13,7 @@ interface ColorSuggestionsProps {
 }
 
 const PRESETS = [
-  { name: "Anastasia\u2019s Wedding", colors: ["#8b2252", "#1b3a6b", "#c9a87c"] },
+  { name: "Anastasia\u2019s Wedding", colors: ["#8b2252", "#4a7ab5", "#c9a87c"] },
   { name: "St. Patrick\u2019s Day", colors: ["#2e7d32", "#ffd700"] },
   { name: "Barcelona Game", colors: ["#a50044", "#004d98"] },
   { name: "Monochrome", colors: ["#2c2c2c", "#6b6b6b", "#b0b0b0", "#e8e8e8"] },

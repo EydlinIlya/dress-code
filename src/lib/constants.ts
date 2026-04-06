@@ -1,6 +1,6 @@
 // CIEDE2000 weighting factors
 export const DELTA_E_KL = 0.7; // lightness — forgiving on brightness (low-light photos)
-export const DELTA_E_KC = 1;   // chroma
+export const DELTA_E_KC = 0.7; // chroma — stricter so black/white don't match chromatic colors
 export const DELTA_E_KH = 1;   // hue
 
 // Strictness presets: [good threshold, ask threshold]
