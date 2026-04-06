@@ -58,50 +58,71 @@ function HostPageContent() {
           </p>
         </section>
 
-        {/* Desktop: two-column layout */}
-        <div className="flex flex-col lg:flex-row gap-10">
-          {/* Left column: Picker + Palette */}
-          <div className="space-y-10 lg:w-[400px] shrink-0">
-            <section className="bg-surface-low rounded-[2rem] p-6">
-              <ColorPickerPanel colors={colors} onAddColor={handleAddColor} />
-            </section>
+        {/* Mobile: stacked layout */}
+        <div className="flex flex-col gap-10 lg:hidden">
+          <section className="bg-surface-low rounded-[2rem] p-6">
+            <ColorPickerPanel colors={colors} onAddColor={handleAddColor} />
+          </section>
 
-            <section>
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-                  Your Palette
-                </h3>
-                {colors.length > 0 && (
-                  <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
-                    {colors.length}/{MAX_COLORS} colors
-                  </span>
-                )}
-              </div>
-              <ColorList
-                colors={colors}
-                onRemove={handleRemoveColor}
-                activeIndex={activeColorIndex}
-                onSelect={setActiveColorIndex}
-              />
-            </section>
-          </div>
+          <section>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
+                Your Palette
+              </h3>
+              {colors.length > 0 && (
+                <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
+                  {colors.length}/{MAX_COLORS} colors
+                </span>
+              )}
+            </div>
+            <ColorList
+              colors={colors}
+              onRemove={handleRemoveColor}
+              activeIndex={activeColorIndex}
+              onSelect={setActiveColorIndex}
+            />
+          </section>
 
-          {/* Right column: Suggestions + Desktop Continue */}
-          <div className="flex-1 min-w-0">
-            <section>
-              <ColorSuggestions
-                baseColor={activeColor}
-                onSelect={handleAddColor}
-              />
-            </section>
+          <section>
+            <ColorSuggestions
+              baseColor={activeColor}
+              onSelect={handleAddColor}
+            />
+          </section>
+        </div>
 
-            {/* Desktop Continue button */}
+        {/* Desktop: three-column layout */}
+        <div className="hidden lg:grid lg:grid-cols-[1fr_auto_1fr] gap-8">
+          {/* Left: Picker */}
+          <section className="bg-surface-low rounded-[2rem] p-6 self-start">
+            <ColorPickerPanel colors={colors} onAddColor={handleAddColor} />
+          </section>
+
+          {/* Center: Palette */}
+          <section className="w-[240px] self-start">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
+                Your Palette
+              </h3>
+              {colors.length > 0 && (
+                <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
+                  {colors.length}/{MAX_COLORS}
+                </span>
+              )}
+            </div>
+            <ColorList
+              colors={colors}
+              onRemove={handleRemoveColor}
+              activeIndex={activeColorIndex}
+              onSelect={setActiveColorIndex}
+              wrap
+            />
             {colors.length > 0 && (
-              <div className="hidden lg:flex mt-10 justify-start">
+              <div className="mt-8">
                 <a
                   href={generateSharePageUrl(colors)}
                   onClick={() => setNavigating(true)}
-                  className="soul-gradient text-on-primary font-semibold py-4 px-8 rounded-xl flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all text-lg"
+                  className="soul-gradient text-on-primary font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all w-full"
                 >
                   {navigating ? "Loading…" : "Continue"}
                   {navigating ? (
@@ -112,7 +133,16 @@ function HostPageContent() {
                 </a>
               </div>
             )}
-          </div>
+          </section>
+
+          {/* Right: Presets / Suggestions */}
+          <section className="self-start">
+            <ColorSuggestions
+              baseColor={activeColor}
+              onSelect={handleAddColor}
+              compact
+            />
+          </section>
         </div>
       </main>
 
