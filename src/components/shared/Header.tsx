@@ -9,7 +9,7 @@ export function Header() {
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           <span className="text-xl font-[family-name:var(--font-heading)] font-semibold tracking-tight text-on-surface">
-            Dress Code
+            Code Dress
           </span>
         </a>
       </div>

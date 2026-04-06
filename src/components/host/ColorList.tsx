@@ -26,7 +26,7 @@ export function ColorList({ colors, onRemove, activeIndex, onSelect }: ColorList
   }
 
   return (
-    <div className="flex gap-6 overflow-x-auto pb-4 px-2">
+    <div className="flex gap-6 overflow-x-auto pt-2 pb-4 px-2">
       {colors.map((color, i) => (
         <div key={`${color}-${i}`} className="flex flex-col items-center gap-3 shrink-0">
           <div className="relative group">

@@ -38,16 +38,16 @@ export function ColorSuggestions({ baseColor, onSelect }: ColorSuggestionsProps)
           onClick={() => setOpen((v) => !v)}
           className="w-full flex items-center justify-between py-3 px-1"
         >
-          <div className="flex items-center gap-2">
-            <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-              {suggestions ? "Suggestions" : "Presets"}
-            </h3>
+          <div className="flex items-center gap-2.5">
             {baseColor && (
               <div
-                className="w-4 h-4 rounded-full border border-outline-variant/30 shadow-sm"
+                className="w-5 h-5 rounded-full border border-outline-variant/30 shadow-sm"
                 style={{ backgroundColor: baseColor }}
               />
             )}
+            <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
+              {suggestions ? "Matches for this" : "Presets"}
+            </h3>
           </div>
           <ChevronDown
             className={cn(
@@ -71,16 +71,16 @@ export function ColorSuggestions({ baseColor, onSelect }: ColorSuggestionsProps)
 
       {/* Desktop: always visible */}
       <div className="hidden lg:block">
-        <div className="flex items-center gap-2 mb-6">
-          <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-            {suggestions ? "Suggestions" : "Presets"}
-          </h3>
+        <div className="flex items-center gap-2.5 mb-6">
           {baseColor && (
             <div
-              className="w-4 h-4 rounded-full border border-outline-variant/30 shadow-sm"
+              className="w-5 h-5 rounded-full border border-outline-variant/30 shadow-sm"
               style={{ backgroundColor: baseColor }}
             />
           )}
+          <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
+            {suggestions ? "Matches for this" : "Presets"}
+          </h3>
         </div>
         <div className="space-y-4">
           {suggestions
