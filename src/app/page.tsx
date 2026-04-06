@@ -91,38 +91,26 @@ function HostPageContent() {
           </section>
         </div>
 
-        {/* Desktop: three-column layout */}
-        <div className="hidden lg:grid lg:grid-cols-[1fr_auto_1fr] gap-8">
-          {/* Left: Picker */}
-          <section className="bg-surface-low rounded-[2rem] p-6 self-start">
-            <ColorPickerPanel colors={colors} onAddColor={handleAddColor} />
-          </section>
-
-          {/* Center: Palette */}
-          <section className="w-[240px] self-start">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-                Your Palette
-              </h3>
+        {/* Desktop layout */}
+        <div className="hidden lg:block">
+          {/* Palette ribbon — full width */}
+          <section className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
+                  Your Palette
+                </h3>
+                {colors.length > 0 && (
+                  <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
+                    {colors.length}/{MAX_COLORS}
+                  </span>
+                )}
+              </div>
               {colors.length > 0 && (
-                <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
-                  {colors.length}/{MAX_COLORS}
-                </span>
-              )}
-            </div>
-            <ColorList
-              colors={colors}
-              onRemove={handleRemoveColor}
-              activeIndex={activeColorIndex}
-              onSelect={setActiveColorIndex}
-              wrap
-            />
-            {colors.length > 0 && (
-              <div className="mt-8">
                 <a
                   href={generateSharePageUrl(colors)}
                   onClick={() => setNavigating(true)}
-                  className="soul-gradient text-on-primary font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all w-full"
+                  className="soul-gradient text-on-primary font-semibold py-3 px-7 rounded-xl flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all"
                 >
                   {navigating ? "Loading…" : "Continue"}
                   {navigating ? (
@@ -131,18 +119,30 @@ function HostPageContent() {
                     <ArrowRight className="h-5 w-5" />
                   )}
                 </a>
-              </div>
-            )}
-          </section>
-
-          {/* Right: Presets / Suggestions */}
-          <section className="self-start">
-            <ColorSuggestions
-              baseColor={activeColor}
-              onSelect={handleAddColor}
-              compact
+              )}
+            </div>
+            <ColorList
+              colors={colors}
+              onRemove={handleRemoveColor}
+              activeIndex={activeColorIndex}
+              onSelect={setActiveColorIndex}
             />
           </section>
+
+          {/* Two columns: Picker + Suggestions */}
+          <div className="grid grid-cols-[400px_1fr] gap-10">
+            <section className="bg-surface-low rounded-[2rem] p-6 self-start">
+              <ColorPickerPanel colors={colors} onAddColor={handleAddColor} />
+            </section>
+
+            <section className="self-start">
+              <ColorSuggestions
+                baseColor={activeColor}
+                onSelect={handleAddColor}
+                compact
+              />
+            </section>
+          </div>
         </div>
       </main>
 

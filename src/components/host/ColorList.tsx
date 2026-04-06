@@ -7,10 +7,9 @@ interface ColorListProps {
   onRemove: (index: number) => void;
   activeIndex?: number | null;
   onSelect?: (index: number) => void;
-  wrap?: boolean;
 }
 
-export function ColorList({ colors, onRemove, activeIndex, onSelect, wrap }: ColorListProps) {
+export function ColorList({ colors, onRemove, activeIndex, onSelect }: ColorListProps) {
   if (colors.length === 0) {
     return (
       <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2">
@@ -27,7 +26,7 @@ export function ColorList({ colors, onRemove, activeIndex, onSelect, wrap }: Col
   }
 
   return (
-    <div className={wrap ? "grid grid-cols-2 gap-5 pt-2 pb-4 px-2" : "flex gap-6 overflow-x-auto pt-2 pb-4 px-2"}>
+    <div className="flex gap-6 overflow-x-auto pt-2 pb-4 px-2">
       {colors.map((color, i) => (
         <div key={`${color}-${i}`} className="flex flex-col items-center gap-3 shrink-0">
           <div className="relative group">
