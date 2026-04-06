@@ -38,7 +38,7 @@ export function GuestView({ allowedColors, hostName, strictness, banner }: Guest
 
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
-  const { canvasRef, sampledPoint, imageLoaded, loadImage, sampleAt, setSampledPoint } =
+  const { canvasRef, sampledPoint, imageLoaded, samplingBlocked, loadImage, sampleAt, setSampledPoint } =
     useCanvasSampler();
   const { supported: eyeDropperSupported, pickColor } = useEyeDropper();
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -143,6 +143,14 @@ export function GuestView({ allowedColors, hostName, strictness, banner }: Guest
                   onSelect={handleSelectPhoto}
                 />
                 <ImageCanvas canvasRef={canvasRef} onSample={sampleAt} hasSampled={!!sampledPoint} />
+
+                {samplingBlocked && (
+                  <div className="flex items-center gap-3 px-5 py-3 bg-secondary-container rounded-2xl">
+                    <span className="text-sm text-on-surface-variant">
+                      This image doesn&apos;t allow color sampling. Try uploading the image from your device instead.
+                    </span>
+                  </div>
+                )}
 
                 {/* Action buttons — larger touch targets */}
                 <div className="flex flex-wrap justify-center gap-2">

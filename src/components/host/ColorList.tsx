@@ -12,7 +12,7 @@ interface ColorListProps {
 export function ColorList({ colors, onRemove, activeIndex, onSelect }: ColorListProps) {
   if (colors.length === 0) {
     return (
-      <div className="flex gap-6 overflow-x-auto pt-2 pb-4 px-2">
+      <div className="flex items-start gap-6 min-h-[7.5rem] pt-2 pb-4 px-2">
         <div className="flex flex-col items-center gap-3 shrink-0">
           <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-outline-variant/30 flex items-center justify-center">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-outline-variant/40">
@@ -29,7 +29,7 @@ export function ColorList({ colors, onRemove, activeIndex, onSelect }: ColorList
   }
 
   return (
-    <div className="flex gap-6 overflow-x-auto pt-2 pb-4 px-2">
+    <div className="flex gap-6 overflow-x-auto min-h-[7.5rem] pt-2 pb-4 px-2">
       {colors.map((color, i) => (
         <div key={`${color}-${i}`} className="flex flex-col items-center gap-3 shrink-0">
           <div className="relative group">

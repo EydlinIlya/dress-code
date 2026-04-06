@@ -86,7 +86,6 @@ export function ImageUploader({ onUpload, onLoadUrl }: ImageUploaderProps) {
     setUrlLoading(true);
 
     const img = new window.Image();
-    img.crossOrigin = "anonymous";
     img.onload = () => {
       setUrlLoading(false);
       onLoadUrl(url);

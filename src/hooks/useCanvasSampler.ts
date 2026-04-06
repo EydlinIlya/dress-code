@@ -9,41 +9,57 @@ export function useCanvasSampler() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [sampledPoint, setSampledPoint] = useState<SampledPoint | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [samplingBlocked, setSamplingBlocked] = useState(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const loadImage = useCallback((src: string) => {
-    const img = new Image();
-    if (src.startsWith("http")) {
-      img.crossOrigin = "anonymous";
-    }
+  const drawToCanvas = useCallback((img: HTMLImageElement) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    img.onload = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+    const container = canvas.parentElement;
+    const maxWidth = container?.clientWidth ?? 600;
+    const maxHeight = 500;
 
-      const container = canvas.parentElement;
-      const maxWidth = container?.clientWidth ?? 600;
-      const maxHeight = 500;
+    const scale = Math.min(maxWidth / img.width, maxHeight / img.height, 1);
+    canvas.width = img.width * scale;
+    canvas.height = img.height * scale;
 
-      const scale = Math.min(maxWidth / img.width, maxHeight / img.height, 1);
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      imageRef.current = img;
-      setImageLoaded(true);
-      setSampledPoint(null);
-    };
-
-    img.onerror = () => {
-      setImageLoaded(false);
-    };
-
-    img.src = src;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    imageRef.current = img;
+    setImageLoaded(true);
+    setSampledPoint(null);
+    setSamplingBlocked(false);
   }, []);
+
+  const loadImage = useCallback((src: string) => {
+    const isRemote = src.startsWith("http");
+
+    if (isRemote) {
+      // Try with CORS first so canvas isn't tainted
+      const corsImg = new Image();
+      corsImg.crossOrigin = "anonymous";
+      corsImg.onload = () => drawToCanvas(corsImg);
+      corsImg.onerror = () => {
+        // CORS failed — load without (canvas will be tainted)
+        const fallbackImg = new Image();
+        fallbackImg.onload = () => {
+          drawToCanvas(fallbackImg);
+          setSamplingBlocked(true);
+        };
+        fallbackImg.onerror = () => setImageLoaded(false);
+        fallbackImg.src = src;
+      };
+      corsImg.src = src;
+    } else {
+      const img = new Image();
+      img.onload = () => drawToCanvas(img);
+      img.onerror = () => setImageLoaded(false);
+      img.src = src;
+    }
+  }, [drawToCanvas]);
 
   const sampleAt = useCallback(
     (clientX: number, clientY: number) => {
@@ -65,22 +81,27 @@ export function useCanvasSampler() {
       const sw = Math.min(SAMPLE_REGION_SIZE, canvas.width - sx);
       const sh = Math.min(SAMPLE_REGION_SIZE, canvas.height - sy);
 
-      const imageData = ctx.getImageData(sx, sy, sw, sh).data;
-      const pixelCount = (sw * sh) || 1;
-      let r = 0,
-        g = 0,
-        b = 0;
-      for (let i = 0; i < imageData.length; i += 4) {
-        r += imageData[i];
-        g += imageData[i + 1];
-        b += imageData[i + 2];
-      }
-      r = Math.round(r / pixelCount);
-      g = Math.round(g / pixelCount);
-      b = Math.round(b / pixelCount);
+      try {
+        const imageData = ctx.getImageData(sx, sy, sw, sh).data;
+        const pixelCount = (sw * sh) || 1;
+        let r = 0,
+          g = 0,
+          b = 0;
+        for (let i = 0; i < imageData.length; i += 4) {
+          r += imageData[i];
+          g += imageData[i + 1];
+          b += imageData[i + 2];
+        }
+        r = Math.round(r / pixelCount);
+        g = Math.round(g / pixelCount);
+        b = Math.round(b / pixelCount);
 
-      const color = rgbToHex(r, g, b);
-      setSampledPoint({ x, y, color });
+        const color = rgbToHex(r, g, b);
+        setSampledPoint({ x, y, color });
+      } catch {
+        // SecurityError — tainted canvas from cross-origin image
+        setSamplingBlocked(true);
+      }
     },
     []
   );
@@ -117,6 +138,7 @@ export function useCanvasSampler() {
     canvasRef,
     sampledPoint,
     imageLoaded,
+    samplingBlocked,
     loadImage,
     sampleAt,
     setSampledPoint,
