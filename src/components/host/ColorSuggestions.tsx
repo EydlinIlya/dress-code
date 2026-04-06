@@ -61,7 +61,15 @@ export function ColorSuggestions({ baseColor, onSelect, compact }: ColorSuggesti
     return (
       <div>
         <div className="mb-5">{heading}</div>
-        {content}
+        <div className="grid grid-cols-2 gap-3">
+          {suggestions
+            ? (Object.keys(suggestionLabels) as (keyof ColorSuggestionsType)[]).map((key) => (
+                <SuggestionRow key={key} label={suggestionLabels[key]} colors={suggestions[key]} onSelect={onSelect} />
+              ))
+            : PRESETS.map((preset) => (
+                <PresetRow key={preset.name} preset={preset} onSelect={onSelect} />
+              ))}
+        </div>
       </div>
     );
   }

@@ -12,14 +12,17 @@ interface ColorListProps {
 export function ColorList({ colors, onRemove, activeIndex, onSelect }: ColorListProps) {
   if (colors.length === 0) {
     return (
-      <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2">
-        <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-outline-variant/30 flex items-center justify-center shrink-0">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-outline-variant/40">
-            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor" opacity="0.3"/>
-            <circle cx="7.5" cy="11.5" r="1.5" fill="currentColor" opacity="0.3"/>
-            <circle cx="12" cy="7.5" r="1.5" fill="currentColor" opacity="0.3"/>
-            <circle cx="16.5" cy="11.5" r="1.5" fill="currentColor" opacity="0.3"/>
-          </svg>
+      <div className="flex gap-6 overflow-x-auto pt-2 pb-4 px-2">
+        <div className="flex flex-col items-center gap-3 shrink-0">
+          <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-outline-variant/30 flex items-center justify-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-outline-variant/40">
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor" opacity="0.3"/>
+              <circle cx="7.5" cy="11.5" r="1.5" fill="currentColor" opacity="0.3"/>
+              <circle cx="12" cy="7.5" r="1.5" fill="currentColor" opacity="0.3"/>
+              <circle cx="16.5" cy="11.5" r="1.5" fill="currentColor" opacity="0.3"/>
+            </svg>
+          </div>
+          <span className="font-mono text-[10px] text-transparent select-none">&nbsp;</span>
         </div>
       </div>
     );
