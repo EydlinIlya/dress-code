@@ -8,7 +8,7 @@ import {
   MATCH_MESSAGES,
   MAX_NAME_LENGTH,
 } from "./constants";
-import type { Strictness } from "@/types";
+import type { Strictness, GuestStyle } from "@/types";
 
 export function parseColorsFromUrl(param: string): string[] {
   let decoded: string;
@@ -55,25 +55,32 @@ export function parseStrictness(param: string | null): Strictness {
   return "default";
 }
 
-/** Encode name + strictness into an opaque base64 query param */
-export function encodeShareData(name: string, strictness: Strictness): string {
+export function parseGuestStyle(param: string | null): GuestStyle {
+  if (param === "elegant" || param === "playful") return param;
+  return "classic";
+}
+
+/** Encode name + strictness + style into an opaque base64 query param */
+export function encodeShareData(name: string, strictness: Strictness, style: GuestStyle = "classic"): string {
   const payload: Record<string, string> = {};
   if (name) payload.n = name;
   if (strictness !== "default") payload.s = strictness;
+  if (style !== "classic") payload.t = style;
   if (Object.keys(payload).length === 0) return "";
   return btoa(JSON.stringify(payload));
 }
 
-/** Decode the opaque `d` query param back to name + strictness */
-export function decodeShareData(encoded: string | null): { name: string | null; strictness: Strictness } {
-  if (!encoded) return { name: null, strictness: "default" };
+/** Decode the opaque `d` query param back to name + strictness + style */
+export function decodeShareData(encoded: string | null): { name: string | null; strictness: Strictness; style: GuestStyle } {
+  if (!encoded) return { name: null, strictness: "default", style: "classic" };
   try {
     const json = JSON.parse(atob(encoded));
     const name = typeof json.n === "string" ? sanitizeName(json.n) : null;
     const strictness = parseStrictness(typeof json.s === "string" ? json.s : null);
-    return { name, strictness };
+    const style = parseGuestStyle(typeof json.t === "string" ? json.t : null);
+    return { name, strictness, style };
   } catch {
-    return { name: null, strictness: "default" };
+    return { name: null, strictness: "default", style: "classic" };
   }
 }
 

@@ -82,6 +82,7 @@ export default function PreviewPage({
       allowedColors={allowedColors}
       hostName={hostName}
       strictness={strictness}
+      guestStyle={decoded.style}
       banner={banner}
     />
   );

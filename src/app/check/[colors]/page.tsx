@@ -34,6 +34,7 @@ export default function GuestPage({
       allowedColors={allowedColors}
       hostName={hostName}
       strictness={strictness}
+      guestStyle={decoded.style}
     />
   );
 }
