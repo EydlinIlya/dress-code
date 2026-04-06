@@ -1,6 +1,6 @@
 export type MatchLevel = "good" | "ask" | "no";
 export type Strictness = "strict" | "default" | "relaxed";
-export type GuestStyle = "classic" | "elegant" | "playful";
+export type GuestStyle = "wedding" | "party" | "gala";
 
 export interface MatchResult {
   level: MatchLevel;

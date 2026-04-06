@@ -9,7 +9,7 @@ interface StyleSelectorProps {
   onChange: (style: GuestStyle) => void;
 }
 
-const styles: GuestStyle[] = ["classic", "elegant", "playful"];
+const styles: GuestStyle[] = ["wedding", "party", "gala"];
 
 export function StyleSelector({ value, onChange }: StyleSelectorProps) {
   return (

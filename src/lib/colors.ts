@@ -56,23 +56,23 @@ export function parseStrictness(param: string | null): Strictness {
 }
 
 export function parseGuestStyle(param: string | null): GuestStyle {
-  if (param === "elegant" || param === "playful") return param;
-  return "classic";
+  if (param === "party" || param === "gala") return param;
+  return "wedding";
 }
 
 /** Encode name + strictness + style into an opaque base64 query param */
-export function encodeShareData(name: string, strictness: Strictness, style: GuestStyle = "classic"): string {
+export function encodeShareData(name: string, strictness: Strictness, style: GuestStyle = "wedding"): string {
   const payload: Record<string, string> = {};
   if (name) payload.n = name;
   if (strictness !== "default") payload.s = strictness;
-  if (style !== "classic") payload.t = style;
+  if (style !== "wedding") payload.t = style;
   if (Object.keys(payload).length === 0) return "";
   return btoa(JSON.stringify(payload));
 }
 
 /** Decode the opaque `d` query param back to name + strictness + style */
 export function decodeShareData(encoded: string | null): { name: string | null; strictness: Strictness; style: GuestStyle } {
-  if (!encoded) return { name: null, strictness: "default", style: "classic" };
+  if (!encoded) return { name: null, strictness: "default", style: "wedding" };
   try {
     const json = JSON.parse(atob(encoded));
     const name = typeof json.n === "string" ? sanitizeName(json.n) : null;
@@ -80,7 +80,7 @@ export function decodeShareData(encoded: string | null): { name: string | null; 
     const style = parseGuestStyle(typeof json.t === "string" ? json.t : null);
     return { name, strictness, style };
   } catch {
-    return { name: null, strictness: "default", style: "classic" };
+    return { name: null, strictness: "default", style: "wedding" };
   }
 }
 

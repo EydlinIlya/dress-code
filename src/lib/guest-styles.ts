@@ -9,49 +9,82 @@ export interface GuestStyleConfig {
   surface: string;
   fontHeading: string;
   fontBody: string;
+  bgImage?: string;
+  bgSize?: string;
+  bgPosition?: string;
 }
 
 export const GUEST_STYLES: Record<GuestStyle, GuestStyleConfig> = {
-  classic: {
-    label: "Classic",
-    description: "Clean and minimal",
-    bg: "#faf9f7",
-    text: "#2f3331",
-    textMuted: "#5c605d",
-    surface: "#f3f4f1",
-    fontHeading: "'Manrope', sans-serif",
-    fontBody: "'Inter', sans-serif",
-  },
-  elegant: {
-    label: "Elegant",
-    description: "Refined and warm",
-    bg: "#1a1a2e",
-    text: "#e8e6e3",
-    textMuted: "#a09b93",
-    surface: "#25253d",
+  wedding: {
+    label: "Wedding",
+    description: "Soft and romantic",
+    bg: "#faf8f4",
+    text: "#3a3632",
+    textMuted: "#8a847c",
+    surface: "#f0ebe3",
     fontHeading: "var(--font-playfair), serif",
     fontBody: "var(--font-sans), sans-serif",
+    bgImage: [
+      "radial-gradient(ellipse 800px 600px at 5% -5%, rgba(200,180,160,0.12) 0%, transparent 70%)",
+      "radial-gradient(ellipse 600px 800px at 95% 105%, rgba(200,180,160,0.09) 0%, transparent 70%)",
+      "radial-gradient(circle 300px at 80% 20%, rgba(220,200,180,0.06) 0%, transparent 70%)",
+    ].join(", "),
   },
-  playful: {
-    label: "Playful",
-    description: "Bright and fun",
-    bg: "#fef6e4",
-    text: "#2d334a",
-    textMuted: "#64607a",
-    surface: "#fff4d9",
+  party: {
+    label: "Party",
+    description: "Bold and fun",
+    bg: "#1a0a2e",
+    text: "#f0eaff",
+    textMuted: "#b0a4c8",
+    surface: "#2a1a42",
     fontHeading: "var(--font-fredoka), sans-serif",
     fontBody: "var(--font-nunito), sans-serif",
+    bgImage: [
+      "radial-gradient(circle, rgba(255,120,180,0.3) 1.5px, transparent 1.5px)",
+      "radial-gradient(circle, rgba(120,200,255,0.25) 1px, transparent 1px)",
+      "radial-gradient(circle, rgba(255,220,80,0.25) 1.5px, transparent 1.5px)",
+      "radial-gradient(circle, rgba(140,255,160,0.2) 1px, transparent 1px)",
+    ].join(", "),
+    bgSize: "50px 50px, 70px 70px, 90px 90px, 60px 60px",
+    bgPosition: "0 0, 25px 15px, 10px 40px, 45px 30px",
+  },
+  gala: {
+    label: "Gala",
+    description: "Elegant black-tie",
+    bg: "#0c0c14",
+    text: "#ece8e0",
+    textMuted: "#a09a90",
+    surface: "#1a1a24",
+    fontHeading: "var(--font-playfair), serif",
+    fontBody: "var(--font-sans), sans-serif",
+    bgImage: [
+      "radial-gradient(ellipse 500px 500px at 15% 10%, rgba(200,180,140,0.08) 0%, transparent 70%)",
+      "radial-gradient(ellipse 400px 600px at 85% 90%, rgba(200,180,140,0.06) 0%, transparent 70%)",
+      "repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 80px)",
+    ].join(", "),
   },
 };
 
 export function getStyleCssVars(style: GuestStyle): React.CSSProperties {
   const config = GUEST_STYLES[style];
-  return {
+  const css: Record<string, string> = {
     "--guest-bg": config.bg,
     "--guest-text": config.text,
     "--guest-text-muted": config.textMuted,
     "--guest-surface": config.surface,
     "--guest-font-heading": config.fontHeading,
     "--guest-font-body": config.fontBody,
-  } as React.CSSProperties;
+  };
+  return css as React.CSSProperties;
+}
+
+export function getStyleBgProps(style: GuestStyle): React.CSSProperties {
+  const config = GUEST_STYLES[style];
+  const props: React.CSSProperties = {};
+  if (config.bgImage) {
+    props.backgroundImage = config.bgImage;
+    if (config.bgSize) props.backgroundSize = config.bgSize;
+    if (config.bgPosition) props.backgroundPosition = config.bgPosition;
+  }
+  return props;
 }

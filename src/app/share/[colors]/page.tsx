@@ -29,7 +29,7 @@ export default function SharePage({
 
   const [hostName, setHostName] = useState("");
   const [strictness, setStrictness] = useState<Strictness>("default");
-  const [guestStyle, setGuestStyle] = useState<GuestStyle>("classic");
+  const [guestStyle, setGuestStyle] = useState<GuestStyle>("wedding");
   const { copied, copy } = useClipboard();
 
   if (allowedColors.length === 0) {
