@@ -45,7 +45,7 @@ export function MatchResult({ sampledColor, allowedColors, variant = "card", str
     return (
       <div
         className={cn(
-          "fixed bottom-0 left-0 right-0 z-50 border-t px-4 py-3 animate-fade-in-up safe-bottom",
+          "fixed bottom-0 left-0 right-0 z-50 border-t px-5 py-4 animate-fade-in-up safe-bottom",
           bg,
           border
         )}

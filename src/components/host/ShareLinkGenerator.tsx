@@ -30,7 +30,7 @@ export function ShareLinkGenerator({ colors }: ShareLinkGeneratorProps) {
       {/* Mobile: floating button to scroll down to share section */}
       <button
         onClick={scrollToLink}
-        className="lg:hidden fixed bottom-6 right-6 z-40 soul-gradient text-on-primary px-5 py-3 rounded-full flex items-center gap-2 shadow-lg hover:opacity-95 active:scale-95 transition-all"
+        className="lg:hidden fixed bottom-8 right-6 z-40 soul-gradient text-on-primary px-5 py-3.5 rounded-full flex items-center gap-2 shadow-lg hover:opacity-95 active:scale-95 transition-all safe-bottom"
       >
         <Link className="h-4 w-4" />
         <span className="text-sm font-semibold">Share Link</span>

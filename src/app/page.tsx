@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState, useCallback } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/shared/Header";
 import { ColorPickerPanel } from "@/components/host/ColorPickerPanel";
@@ -29,6 +29,7 @@ function HostPageContent() {
     setColors((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
+  const [navigating, setNavigating] = useState(false);
   const lastColor = colors.length > 0 ? colors[colors.length - 1] : null;
 
   return (
@@ -84,10 +85,15 @@ function HostPageContent() {
               <div className="hidden lg:flex mt-10 justify-start">
                 <a
                   href={generateSharePageUrl(colors)}
+                  onClick={() => setNavigating(true)}
                   className="soul-gradient text-on-primary font-semibold py-4 px-8 rounded-xl flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all text-lg"
                 >
-                  Continue
-                  <ArrowRight className="h-5 w-5" />
+                  {navigating ? "Loading…" : "Continue"}
+                  {navigating ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <ArrowRight className="h-5 w-5" />
+                  )}
                 </a>
               </div>
             )}
@@ -97,13 +103,18 @@ function HostPageContent() {
 
       {/* Mobile: sticky Continue button */}
       {colors.length > 0 && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-4 py-3 bg-background/90 backdrop-blur-md border-t border-outline-variant/20 safe-bottom">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-4 py-4 bg-background/90 backdrop-blur-md border-t border-outline-variant/20 safe-bottom">
           <a
             href={generateSharePageUrl(colors)}
-            className="soul-gradient text-on-primary font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all w-full"
+            onClick={() => setNavigating(true)}
+            className="soul-gradient text-on-primary font-semibold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all w-full text-lg"
           >
-            Continue
-            <ArrowRight className="h-5 w-5" />
+            {navigating ? "Loading…" : "Continue"}
+            {navigating ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <ArrowRight className="h-5 w-5" />
+            )}
           </a>
         </div>
       )}
