@@ -15,7 +15,7 @@ import type { SampledPoint } from "@/types";
 import type { Strictness } from "@/types";
 
 interface Photo {
-  file?: File;
+  file: File;
   url: string;
 }
 
@@ -38,7 +38,7 @@ export function GuestView({ allowedColors, hostName, strictness, banner }: Guest
 
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
-  const { canvasRef, sampledPoint, imageLoaded, samplingBlocked, loadImage, sampleAt, setSampledPoint } =
+  const { canvasRef, sampledPoint, imageLoaded, loadImage, sampleAt, setSampledPoint } =
     useCanvasSampler();
   const { supported: eyeDropperSupported, pickColor } = useEyeDropper();
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -48,13 +48,6 @@ export function GuestView({ allowedColors, hostName, strictness, banner }: Guest
     const url = URL.createObjectURL(file);
     const newIndex = photos.length;
     setPhotos((prev) => [...prev, { file, url }]);
-    setActivePhotoIndex(newIndex);
-    loadImage(url);
-  }
-
-  function handleLoadUrl(url: string) {
-    const newIndex = photos.length;
-    setPhotos((prev) => [...prev, { url }]);
     setActivePhotoIndex(newIndex);
     loadImage(url);
   }
@@ -134,7 +127,7 @@ export function GuestView({ allowedColors, hostName, strictness, banner }: Guest
           {/* Right column: Upload / Canvas */}
           <div className="flex-1 min-w-0 space-y-4">
             {photos.length === 0 ? (
-              <ImageUploader onUpload={handleUpload} onLoadUrl={handleLoadUrl} />
+              <ImageUploader onUpload={handleUpload} />
             ) : (
               <>
                 <PhotoThumbnails
@@ -143,14 +136,6 @@ export function GuestView({ allowedColors, hostName, strictness, banner }: Guest
                   onSelect={handleSelectPhoto}
                 />
                 <ImageCanvas canvasRef={canvasRef} onSample={sampleAt} hasSampled={!!sampledPoint} />
-
-                {samplingBlocked && (
-                  <div className="flex items-center gap-3 px-5 py-3 bg-secondary-container rounded-2xl">
-                    <span className="text-sm text-on-surface-variant">
-                      This image doesn&apos;t allow color sampling. Try uploading the image from your device instead.
-                    </span>
-                  </div>
-                )}
 
                 {/* Action buttons — larger touch targets */}
                 <div className="flex flex-wrap justify-center gap-2">
