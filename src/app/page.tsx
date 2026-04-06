@@ -100,26 +100,23 @@ function HostPageContent() {
                 <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
                   Your Palette
                 </h3>
-                {colors.length > 0 && (
-                  <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
-                    {colors.length}/{MAX_COLORS}
-                  </span>
-                )}
+                <span className={`text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider transition-opacity ${colors.length > 0 ? "opacity-100" : "opacity-0"}`}>
+                  {colors.length || 0}/{MAX_COLORS}
+                </span>
               </div>
-              {colors.length > 0 && (
-                <a
-                  href={generateSharePageUrl(colors)}
-                  onClick={() => setNavigating(true)}
-                  className="soul-gradient text-on-primary font-semibold py-3 px-7 rounded-xl flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all"
-                >
-                  {navigating ? "Loading…" : "Continue"}
-                  {navigating ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <ArrowRight className="h-5 w-5" />
-                  )}
-                </a>
-              )}
+              <a
+                href={colors.length > 0 ? generateSharePageUrl(colors) : undefined}
+                onClick={colors.length > 0 ? () => setNavigating(true) : undefined}
+                className={`soul-gradient text-on-primary font-semibold py-3 px-7 rounded-xl flex items-center gap-2 transition-all ${colors.length > 0 ? "opacity-100 hover:opacity-95 active:scale-[0.98]" : "opacity-0 pointer-events-none"}`}
+                aria-hidden={colors.length === 0}
+              >
+                {navigating ? "Loading…" : "Continue"}
+                {navigating ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <ArrowRight className="h-5 w-5" />
+                )}
+              </a>
             </div>
             <ColorList
               colors={colors}
