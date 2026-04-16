@@ -10,8 +10,10 @@ export const ACHROMATIC_CHROMA_MAX = 4; // LCH chroma ≤ this → colour is ach
 export const CHROMA_GUARD_MARGIN = 3;
 
 // Auto white balance (gray-world algorithm applied to the full image on load)
-// Per-channel scale factor is capped at this value to prevent overcompensation
-export const AWB_MAX_SCALE = 1.5;
+// Strength blends between no correction (0) and full gray-world correction (1).
+// Per-channel scale is then capped at AWB_MAX_SCALE as a safety net.
+export const AWB_STRENGTH = 0.3;
+export const AWB_MAX_SCALE = 1.2;
 
 // Non-linear colour-count strictness multiplier (chromatic colours only, not black/white)
 // threshold × (1 / numChromaticColors ^ COLOR_COUNT_EXPONENT)

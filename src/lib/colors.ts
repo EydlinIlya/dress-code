@@ -9,6 +9,7 @@ import {
   ACHROMATIC_CHROMA_MAX,
   CHROMA_GUARD_MARGIN,
   COLOR_COUNT_EXPONENT,
+  AWB_STRENGTH,
   AWB_MAX_SCALE,
 } from "./constants";
 import type { Strictness, GuestStyle } from "@/types";
@@ -242,10 +243,15 @@ export function computeAwbFactors(pixels: Uint8ClampedArray): AwbFactors {
   const bAvg = bSum / count || 1;
   const gray = (rAvg + gAvg + bAvg) / 3;
 
+  // Blend toward identity: scale = 1 + (fullScale - 1) * strength
+  // This prevents overcorrection on strongly tinted scenes.
+  const blend = (full: number) =>
+    Math.min(AWB_MAX_SCALE, 1 + (Math.min(AWB_MAX_SCALE, full) - 1) * AWB_STRENGTH);
+
   const factors: AwbFactors = {
-    scaleR: Math.min(AWB_MAX_SCALE, gray / rAvg),
-    scaleG: Math.min(AWB_MAX_SCALE, gray / gAvg),
-    scaleB: Math.min(AWB_MAX_SCALE, gray / bAvg),
+    scaleR: blend(gray / rAvg),
+    scaleG: blend(gray / gAvg),
+    scaleB: blend(gray / bAvg),
   };
 
   console.log(
