@@ -154,9 +154,13 @@ export function evaluateMatch(
   const [sampleL] = chroma(sampleHex).lab();
   const sampleClass = classifyHostColor(sampleHex);
 
+  // Two separate trackers:
+  // - effective: drives the level decision (may be 999 for hard-blocked pairs)
+  // - display: always the raw CIEDE2000 nearest, shown in the UI even when rejected
   let minEffective = Infinity;
-  let minActual = Infinity;
-  let closestColor = allowedColors[0];
+  let closestByEffective = allowedColors[0];
+  let minDisplay = Infinity;
+  let closestByDisplay = allowedColors[0];
 
   for (const { hex: color, hostClass } of classified) {
     // Standard CIEDE2000 (kL = kC = kH = 1)
@@ -188,17 +192,23 @@ export function evaluateMatch(
 
     if (effective < minEffective) {
       minEffective = effective;
-      minActual = actual;
-      closestColor = color;
+      closestByEffective = color;
+    }
+    if (actual < minDisplay) {
+      minDisplay = actual;
+      closestByDisplay = color;
     }
   }
 
-  // Use the colour-count multiplier only for chromatic closest matches
-  const closestClass = classifyHostColor(closestColor);
+  // Level is decided by the effective (guard-aware) minimum.
+  // Display always shows the raw nearest colour so rejected samples still
+  // point to something meaningful in the UI.
+  const closestColor = closestByDisplay;
+  const closestClass = classifyHostColor(closestByEffective);
   const thresholdGood = closestClass === "chromatic" ? rawGood * multiplier : rawGood;
   const thresholdAsk  = closestClass === "chromatic" ? rawAsk  * multiplier : rawAsk;
 
-  const deltaE = Math.round(minActual * 10) / 10;
+  const deltaE = Math.round(minDisplay * 10) / 10;
   console.log(
     `[match] → closest=${closestColor} (${closestClass}) deltaE=${deltaE}` +
     ` strictness=${strictness} multiplier=${multiplier.toFixed(3)}` +
