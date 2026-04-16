@@ -1,7 +1,22 @@
-// CIEDE2000 weighting factors
-export const DELTA_E_KL = 0.7; // lightness — forgiving on brightness (low-light photos)
-export const DELTA_E_KC = 0.7; // chroma — stricter so black/white don't match chromatic colors
-export const DELTA_E_KH = 1;   // hue
+// Black / white detection (applied to host colors)
+export const BLACK_L_MAX = 15;        // L* ≤ this → candidate for "black"
+export const WHITE_L_MIN = 90;        // L* ≥ this → candidate for "white"
+// Ivory (#FFFFF0) has LCH chroma ≈ 5.5 — keep this below that so ivory is treated as chromatic
+export const ACHROMATIC_CHROMA_MAX = 4; // LCH chroma ≤ this → colour is achromatic (black or white)
+
+// Black / white guard (applied to guest sample when matching against an achromatic host colour)
+// If the sample's chroma exceeds the host colour's chroma by more than this margin the match is
+// hard-blocked (ivory can't match white; dark navy can't match black).
+export const CHROMA_GUARD_MARGIN = 3;
+
+// Auto white balance (gray-world algorithm applied to the full image on load)
+// Per-channel scale factor is capped at this value to prevent overcompensation
+export const AWB_MAX_SCALE = 1.5;
+
+// Non-linear colour-count strictness multiplier (chromatic colours only, not black/white)
+// threshold × (1 / numChromaticColors ^ COLOR_COUNT_EXPONENT)
+// 1 colour → ×1.00   2 → ×0.92   5 → ×0.85   10 → ×0.79
+export const COLOR_COUNT_EXPONENT = 0.12;
 
 // Strictness presets: [good threshold, ask threshold]
 export const STRICTNESS_PRESETS = {
