@@ -149,8 +149,10 @@ export function evaluateMatch(
   const multiplier = colorCountMultiplier(numChromatic);
   console.log(`[palette] chromatic=${numChromatic} multiplier=${multiplier.toFixed(3)}`);
 
-  // Guest sample chroma (computed once — needed for the achromatic guard)
+  // Guest sample — classify + extract L*/C once (same logic as host colours)
   const sampleC = chroma(sampleHex).lch()[1];
+  const [sampleL] = chroma(sampleHex).lab();
+  const sampleClass = classifyHostColor(sampleHex);
 
   let minEffective = Infinity;
   let minActual = Infinity;
@@ -161,20 +163,22 @@ export function evaluateMatch(
     const actual = chroma.deltaE(sampleHex, color);
     let effective = actual;
 
+    const hostC = chroma(color).lch()[1];
+    const [hostL] = chroma(color).lab();
+
     if (hostClass === "black" || hostClass === "white") {
       // Hard-block: if the sample has significantly more chroma than the
       // achromatic host colour it can't be considered black/white.
       // (e.g. ivory won't match white; dark navy won't match black)
-      const hostC = chroma(color).lch()[1];
       if (sampleC > hostC + CHROMA_GUARD_MARGIN) {
         effective = 999;
       }
     }
 
     console.log(
-      `[match] ${sampleHex} vs ${color} (${hostClass})` +
-      ` | deltaE=${actual.toFixed(1)} effective=${effective.toFixed(1)}` +
-      ` | sampleC=${sampleC.toFixed(1)}`
+      `[match] ${sampleHex} (${sampleClass}, L=${sampleL.toFixed(1)}, C=${sampleC.toFixed(1)})` +
+      ` vs ${color} (${hostClass}, L=${hostL.toFixed(1)}, C=${hostC.toFixed(1)})` +
+      ` | deltaE=${actual.toFixed(1)} effective=${effective.toFixed(1)}`
     );
 
     if (effective < minEffective) {
