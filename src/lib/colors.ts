@@ -167,12 +167,17 @@ export function evaluateMatch(
     const [hostL] = chroma(color).lab();
 
     if (hostClass === "black" || hostClass === "white") {
-      // Hard-block: if the sample has significantly more chroma than the
-      // achromatic host colour it can't be considered black/white.
-      // (e.g. ivory won't match white; dark navy won't match black)
+      // Chromatic sample can't match an achromatic host colour.
+      // (e.g. dark navy can't match black; cream can't match white)
       if (sampleC > hostC + CHROMA_GUARD_MARGIN) {
         effective = 999;
       }
+    }
+
+    if ((sampleClass === "black" || sampleClass === "white") && hostClass === "chromatic") {
+      // Reverse guard: achromatic sample can't match a chromatic host colour.
+      // (e.g. near-black can't match dark navy; off-white can't match champagne)
+      effective = 999;
     }
 
     console.log(
