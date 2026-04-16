@@ -2,7 +2,7 @@
 export const BLACK_L_MAX = 35;        // L* ≤ this → candidate for "black" (catches dark charcoals)
 export const WHITE_L_MIN = 85;        // L* ≥ this → candidate for "white" (catches near-whites below 90)
 // At very low L* a chroma of 8 is still just a dark tinted colour → generous black threshold.
-export const BLACK_CHROMA_MAX = 8;
+export const BLACK_CHROMA_MAX = 4.5;
 // At very high L* chroma must be very low — C≈3.7 is already visibly warm/tinted.
 // Ivory (#FFFFF0) has C ≈ 5.5, so keep well below that.
 export const WHITE_CHROMA_MAX = 3;
