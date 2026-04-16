@@ -2,14 +2,14 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import { SAMPLE_REGION_SIZE } from "@/lib/constants";
-import { rgbToHex } from "@/lib/colors";
+import { rgbToHex, computeAwbFactors, applyAwb } from "@/lib/colors";
 import type { SampledPoint } from "@/types";
 
 export function useCanvasSampler() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [sampledPoint, setSampledPoint] = useState<SampledPoint | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const imageRef = useRef<HTMLImageElement | null>(null);
+  const awbImageDataRef = useRef<ImageData | null>(null);
 
   const loadImage = useCallback((src: string) => {
     const img = new Image();
@@ -30,7 +30,14 @@ export function useCanvasSampler() {
       canvas.height = img.height * scale;
 
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      imageRef.current = img;
+
+      // Compute and apply gray-world auto white balance
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const factors = computeAwbFactors(imageData.data);
+      applyAwb(imageData, factors);
+      ctx.putImageData(imageData, 0, 0);
+      awbImageDataRef.current = imageData;
+
       setImageLoaded(true);
       setSampledPoint(null);
     };
@@ -84,13 +91,15 @@ export function useCanvasSampler() {
 
   const redraw = useCallback(() => {
     const canvas = canvasRef.current;
-    const img = imageRef.current;
-    if (!canvas || !img) return;
+    const awbData = awbImageDataRef.current;
+    if (!canvas || !awbData) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    // Restore the AWB-corrected pixels (not the original image) so the
+    // circle overlay doesn't fight with the white-balance correction
+    ctx.putImageData(awbData, 0, 0);
 
     if (sampledPoint) {
       ctx.beginPath();
