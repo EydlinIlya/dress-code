@@ -1,9 +1,11 @@
 // Black / white detection (applied to host colors)
 export const BLACK_L_MAX = 15;        // L* ≤ this → candidate for "black"
 export const WHITE_L_MIN = 90;        // L* ≥ this → candidate for "white"
-// #1e2125 (near-black with faint blue) has C ≈ 4.0; ivory (#FFFFF0) has C ≈ 5.5.
-// Keep this value between those two so near-blacks classify correctly and ivory stays chromatic.
-export const ACHROMATIC_CHROMA_MAX = 5; // LCH chroma ≤ this → colour is achromatic (black or white)
+// At very low L* a chroma of 8 is still just a dark tinted colour → generous black threshold.
+export const BLACK_CHROMA_MAX = 8;
+// At very high L* even chroma ≈ 5 is visibly warm/tinted (ivory territory) → strict white threshold.
+// Ivory (#FFFFF0) has C ≈ 5.5, so keep this below that.
+export const WHITE_CHROMA_MAX = 4;
 
 // Black / white guard (applied to guest sample when matching against an achromatic host colour)
 // If the sample's chroma exceeds the host colour's chroma by more than this margin the match is

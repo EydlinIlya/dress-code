@@ -6,7 +6,8 @@ import {
   MAX_NAME_LENGTH,
   BLACK_L_MAX,
   WHITE_L_MIN,
-  ACHROMATIC_CHROMA_MAX,
+  BLACK_CHROMA_MAX,
+  WHITE_CHROMA_MAX,
   CHROMA_GUARD_MARGIN,
   COLOR_COUNT_EXPONENT,
   AWB_STRENGTH,
@@ -110,8 +111,8 @@ type HostColorClass = "black" | "white" | "chromatic";
 function classifyHostColor(hex: string): HostColorClass {
   const [L] = chroma(hex).lab();
   const C = chroma(hex).lch()[1];
-  if (L <= BLACK_L_MAX && C <= ACHROMATIC_CHROMA_MAX) return "black";
-  if (L >= WHITE_L_MIN && C <= ACHROMATIC_CHROMA_MAX) return "white";
+  if (L <= BLACK_L_MAX && C <= BLACK_CHROMA_MAX) return "black";
+  if (L >= WHITE_L_MIN && C <= WHITE_CHROMA_MAX) return "white";
   return "chromatic";
 }
 
