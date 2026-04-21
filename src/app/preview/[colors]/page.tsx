@@ -1,12 +1,13 @@
 "use client";
 
-import { use, useMemo } from "react";
+import { use, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Copy, Check, Eye } from "lucide-react";
 import { notFound } from "next/navigation";
 import { GuestView } from "@/components/guest/GuestView";
 import { parseColorsFromUrl, generateShareUrl, sanitizeName, parseStrictness, decodeShareData } from "@/lib/colors";
 import { useClipboard } from "@/hooks/useClipboard";
+import { useLocale, useT } from "@/lib/i18n/LocaleProvider";
 import type { Strictness } from "@/types";
 
 export default function PreviewPage({
@@ -30,6 +31,14 @@ export default function PreviewPage({
     [colorsParam]
   );
 
+  const t = useT();
+  const { locale, setLocale } = useLocale();
+  useEffect(() => {
+    if (decoded.locale && decoded.locale !== locale) {
+      setLocale(decoded.locale);
+    }
+  }, [decoded.locale, locale, setLocale]);
+
   if (allowedColors.length === 0) {
     notFound();
   }
@@ -50,11 +59,11 @@ export default function PreviewPage({
             className="flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors shrink-0"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Back to settings</span>
+            <span className="hidden sm:inline">{t("preview.back")}</span>
           </button>
           <div className="flex items-center gap-1.5 text-sm font-medium text-on-surface-variant/70">
             <Eye className="h-4 w-4 shrink-0" />
-            <span>Preview</span>
+            <span>{t("preview.label")}</span>
           </div>
         </div>
         <button
@@ -64,12 +73,12 @@ export default function PreviewPage({
           {copied ? (
             <>
               <Check className="h-4 w-4" />
-              Copied!
+              {t("share.copied")}
             </>
           ) : (
             <>
               <Copy className="h-4 w-4" />
-              Copy Link
+              {t("share.copyLink")}
             </>
           )}
         </button>

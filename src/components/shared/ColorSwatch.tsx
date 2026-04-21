@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/LocaleProvider";
 
 interface ColorSwatchProps {
   color: string;
@@ -23,6 +24,7 @@ export function ColorSwatch({
   onClick,
   className,
 }: ColorSwatchProps) {
+  const t = useT();
   return (
     <button
       type="button"
@@ -37,7 +39,7 @@ export function ColorSwatch({
         className
       )}
       style={{ backgroundColor: color }}
-      aria-label={`Color ${color}`}
+      aria-label={t("swatch.aria", { color })}
     />
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Manrope, JetBrains_Mono, Playfair_Display, Fredoka, Nunito } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -62,7 +63,9 @@ export default function RootLayout({
       className={`${inter.variable} ${manrope.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} ${fredoka.variable} ${nunito.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
-        <TooltipProvider>{children}</TooltipProvider>
+        <LocaleProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

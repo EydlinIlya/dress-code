@@ -2,6 +2,8 @@
 
 import { GUEST_STYLES } from "@/lib/guest-styles";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/LocaleProvider";
+import type { TranslationKey } from "@/lib/i18n/translations";
 import type { GuestStyle } from "@/types";
 
 interface StyleSelectorProps {
@@ -11,14 +13,27 @@ interface StyleSelectorProps {
 
 const styles: GuestStyle[] = ["wedding", "party", "gala"];
 
+const labelKeys: Record<GuestStyle, TranslationKey> = {
+  wedding: "style.wedding.label",
+  party: "style.party.label",
+  gala: "style.gala.label",
+};
+
+const descKeys: Record<GuestStyle, TranslationKey> = {
+  wedding: "style.wedding.desc",
+  party: "style.party.desc",
+  gala: "style.gala.desc",
+};
+
 export function StyleSelector({ value, onChange }: StyleSelectorProps) {
+  const t = useT();
   return (
     <div>
       <label className="block text-sm font-medium text-on-surface mb-2">
-        Guest page style
+        {t("style.label")}
       </label>
       <p className="text-xs text-on-surface-variant mb-4">
-        Choose how your guests will see the page.
+        {t("style.desc")}
       </p>
       <div className="grid grid-cols-3 gap-3">
         {styles.map((key) => {
@@ -47,10 +62,10 @@ export function StyleSelector({ value, onChange }: StyleSelectorProps) {
                 </div>
               </div>
               <span className="text-sm font-semibold text-on-surface block">
-                {config.label}
+                {t(labelKeys[key])}
               </span>
               <span className="text-[10px] text-on-surface-variant">
-                {config.description}
+                {t(descKeys[key])}
               </span>
             </button>
           );

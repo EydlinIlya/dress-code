@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { ImageIcon, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/LocaleProvider";
 
 interface ImageUploaderProps {
   onUpload: (file: File) => void;
@@ -12,6 +13,7 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
   const [dragOver, setDragOver] = useState(false);
   const galleryRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
+  const t = useT();
 
   const handleFile = useCallback(
     (file: File) => {
@@ -73,10 +75,10 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
           <ImageIcon className="h-9 w-9 text-on-primary-container" />
         </div>
         <h3 className="font-[family-name:var(--font-heading)] text-lg font-semibold text-on-surface mb-2">
-          Upload Photo
+          {t("uploader.title")}
         </h3>
         <p className="text-sm text-on-surface-variant text-center px-4">
-          Tap to browse gallery or drag &amp; drop
+          {t("uploader.hint")}
         </p>
       </div>
 
@@ -86,7 +88,7 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
         className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-outline-variant/20 bg-surface-lowest text-on-surface hover:bg-surface-low transition-colors"
       >
         <Camera className="h-5 w-5 text-on-surface-variant" />
-        <span className="text-sm font-medium">Take a photo</span>
+        <span className="text-sm font-medium">{t("uploader.takePhoto")}</span>
       </button>
       <input
         ref={cameraRef}

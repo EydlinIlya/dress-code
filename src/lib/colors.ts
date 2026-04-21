@@ -2,7 +2,6 @@ import chroma from "chroma-js";
 import type { MatchResult, ColorSuggestions } from "@/types";
 import {
   STRICTNESS_PRESETS,
-  MATCH_MESSAGES,
   MAX_NAME_LENGTH,
   BLACK_L_MAX,
   WHITE_L_MIN,
@@ -14,6 +13,7 @@ import {
   AWB_MAX_SCALE,
 } from "./constants";
 import type { Strictness, GuestStyle } from "@/types";
+import { normalizeLocale, type Locale } from "./i18n/translations";
 
 export function parseColorsFromUrl(param: string): string[] {
   let decoded: string;
@@ -81,27 +81,39 @@ function base64ToUtf8(encoded: string): string {
   return new TextDecoder().decode(bytes);
 }
 
-/** Encode name + strictness + style into an opaque base64 query param */
-export function encodeShareData(name: string, strictness: Strictness, style: GuestStyle = "wedding"): string {
+/** Encode name + strictness + style + locale into an opaque base64 query param */
+export function encodeShareData(
+  name: string,
+  strictness: Strictness,
+  style: GuestStyle = "wedding",
+  locale: Locale = "en"
+): string {
   const payload: Record<string, string> = {};
   if (name) payload.n = name;
   if (strictness !== "default") payload.s = strictness;
   if (style !== "wedding") payload.t = style;
+  if (locale !== "en") payload.l = locale;
   if (Object.keys(payload).length === 0) return "";
   return utf8ToBase64(JSON.stringify(payload));
 }
 
-/** Decode the opaque `d` query param back to name + strictness + style */
-export function decodeShareData(encoded: string | null): { name: string | null; strictness: Strictness; style: GuestStyle } {
-  if (!encoded) return { name: null, strictness: "default", style: "wedding" };
+/** Decode the opaque `d` query param back to name + strictness + style + locale */
+export function decodeShareData(encoded: string | null): {
+  name: string | null;
+  strictness: Strictness;
+  style: GuestStyle;
+  locale: Locale | null;
+} {
+  if (!encoded) return { name: null, strictness: "default", style: "wedding", locale: null };
   try {
     const json = JSON.parse(base64ToUtf8(encoded));
     const name = typeof json.n === "string" ? sanitizeName(json.n) : null;
     const strictness = parseStrictness(typeof json.s === "string" ? json.s : null);
     const style = parseGuestStyle(typeof json.t === "string" ? json.t : null);
-    return { name, strictness, style };
+    const locale = normalizeLocale(typeof json.l === "string" ? json.l : null);
+    return { name, strictness, style, locale };
   } catch {
-    return { name: null, strictness: "default", style: "wedding" };
+    return { name: null, strictness: "default", style: "wedding", locale: null };
   }
 }
 
@@ -216,12 +228,12 @@ export function evaluateMatch(
   );
 
   if (minEffective <= thresholdGood) {
-    return { level: "good", message: MATCH_MESSAGES.good, deltaE, closestColor };
+    return { level: "good", deltaE, closestColor };
   }
   if (minEffective <= thresholdAsk) {
-    return { level: "ask", message: MATCH_MESSAGES.ask, deltaE, closestColor };
+    return { level: "ask", deltaE, closestColor };
   }
-  return { level: "no", message: MATCH_MESSAGES.no, deltaE, closestColor };
+  return { level: "no", deltaE, closestColor };
 }
 
 export function getSuggestions(baseHex: string): ColorSuggestions {

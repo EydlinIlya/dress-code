@@ -9,9 +9,11 @@ import { ColorList } from "@/components/host/ColorList";
 import { ColorSuggestions } from "@/components/host/ColorSuggestions";
 import { generateSharePageUrl, parseColorsFromUrl } from "@/lib/colors";
 import { MAX_COLORS } from "@/lib/constants";
+import { useT } from "@/lib/i18n/LocaleProvider";
 
 function HostPageContent() {
   const searchParams = useSearchParams();
+  const t = useT();
   const [colors, setColors] = useState<string[]>(() => {
     const c = searchParams.get("c");
     return c ? parseColorsFromUrl(c) : [];
@@ -51,10 +53,10 @@ function HostPageContent() {
         {/* Hero */}
         <section className="mb-12 max-w-3xl">
           <h2 className="text-4xl md:text-5xl leading-[1.1] font-[family-name:var(--font-heading)] font-medium tracking-tight text-on-surface mb-4">
-            Create your event&apos;s dress code.
+            {t("home.hero.title")}
           </h2>
           <p className="text-on-surface-variant leading-relaxed opacity-80">
-            Pick colors and share a link with your guests. No accounts needed.
+            {t("home.hero.subtitle")}
           </p>
         </section>
 
@@ -67,11 +69,11 @@ function HostPageContent() {
           <section>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-                Your Palette
+                {t("home.palette.title")}
               </h3>
               {colors.length > 0 && (
                 <span className="text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider">
-                  {colors.length}/{MAX_COLORS} colors
+                  {t("home.palette.count", { count: colors.length, max: MAX_COLORS })}
                 </span>
               )}
             </div>
@@ -98,10 +100,10 @@ function HostPageContent() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-                  Your Palette
+                  {t("home.palette.title")}
                 </h3>
                 <span className={`text-xs text-on-surface-variant/60 font-medium uppercase tracking-wider transition-opacity ${colors.length > 0 ? "opacity-100" : "opacity-0"}`}>
-                  {colors.length || 0}/{MAX_COLORS}
+                  {t("home.palette.countShort", { count: colors.length || 0, max: MAX_COLORS })}
                 </span>
               </div>
               <a
@@ -110,7 +112,7 @@ function HostPageContent() {
                 className={`soul-gradient text-on-primary font-semibold py-3 px-7 rounded-xl flex items-center gap-2 transition-all ${colors.length > 0 ? "opacity-100 hover:opacity-95 active:scale-[0.98]" : "opacity-0 pointer-events-none"}`}
                 aria-hidden={colors.length === 0}
               >
-                {navigating ? "Loading…" : "Continue"}
+                {navigating ? t("home.loading") : t("home.continue")}
                 {navigating ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
@@ -151,7 +153,7 @@ function HostPageContent() {
             onClick={() => setNavigating(true)}
             className="soul-gradient text-on-primary font-semibold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all w-full text-lg"
           >
-            {navigating ? "Loading…" : "Continue"}
+            {navigating ? t("home.loading") : t("home.continue")}
             {navigating ? (
               <Loader2 className="h-5 w-5 animate-spin" />
             ) : (

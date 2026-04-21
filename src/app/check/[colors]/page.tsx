@@ -1,10 +1,11 @@
 "use client";
 
-import { use, useMemo } from "react";
+import { use, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { notFound } from "next/navigation";
 import { GuestView } from "@/components/guest/GuestView";
 import { parseColorsFromUrl, sanitizeName, parseStrictness, decodeShareData } from "@/lib/colors";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { Strictness } from "@/types";
 
 export default function GuestPage({
@@ -24,6 +25,13 @@ export default function GuestPage({
     () => parseColorsFromUrl(colorsParam),
     [colorsParam]
   );
+
+  const { locale, setLocale } = useLocale();
+  useEffect(() => {
+    if (decoded.locale && decoded.locale !== locale) {
+      setLocale(decoded.locale);
+    }
+  }, [decoded.locale, locale, setLocale]);
 
   if (allowedColors.length === 0) {
     notFound();

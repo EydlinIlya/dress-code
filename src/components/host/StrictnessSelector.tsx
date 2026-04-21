@@ -2,7 +2,8 @@
 
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { STRICTNESS_PRESETS } from "@/lib/constants";
+import { useT } from "@/lib/i18n/LocaleProvider";
+import type { TranslationKey } from "@/lib/i18n/translations";
 import type { Strictness } from "@/types";
 
 interface StrictnessSelectorProps {
@@ -10,9 +11,19 @@ interface StrictnessSelectorProps {
   onChange: (value: Strictness) => void;
 }
 
-const options: { key: Strictness; accent: string; activeBg: string; checkBg: string; inactiveBg: string }[] = [
+const options: {
+  key: Strictness;
+  labelKey: TranslationKey;
+  descKey: TranslationKey;
+  accent: string;
+  activeBg: string;
+  checkBg: string;
+  inactiveBg: string;
+}[] = [
   {
     key: "strict",
+    labelKey: "strictness.strict.label",
+    descKey: "strictness.strict.desc",
     accent: "border-amber-400",
     activeBg: "bg-amber-50",
     checkBg: "bg-amber-500",
@@ -20,6 +31,8 @@ const options: { key: Strictness; accent: string; activeBg: string; checkBg: str
   },
   {
     key: "default",
+    labelKey: "strictness.default.label",
+    descKey: "strictness.default.desc",
     accent: "border-emerald-400",
     activeBg: "bg-emerald-50",
     checkBg: "bg-emerald-500",
@@ -27,6 +40,8 @@ const options: { key: Strictness; accent: string; activeBg: string; checkBg: str
   },
   {
     key: "relaxed",
+    labelKey: "strictness.relaxed.label",
+    descKey: "strictness.relaxed.desc",
     accent: "border-sky-400",
     activeBg: "bg-sky-50",
     checkBg: "bg-sky-500",
@@ -35,15 +50,15 @@ const options: { key: Strictness; accent: string; activeBg: string; checkBg: str
 ];
 
 export function StrictnessSelector({ value, onChange }: StrictnessSelectorProps) {
+  const t = useT();
   return (
     <div className="space-y-3">
       <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant block">
-        How strict?
+        {t("strictness.label")}
       </span>
 
       <div className="grid grid-cols-3 gap-3">
         {options.map((opt) => {
-          const preset = STRICTNESS_PRESETS[opt.key];
           const active = value === opt.key;
           return (
             <button
@@ -68,10 +83,10 @@ export function StrictnessSelector({ value, onChange }: StrictnessSelectorProps)
                 "text-sm font-semibold font-[family-name:var(--font-heading)] text-center leading-tight",
                 active ? "text-on-surface" : "text-on-surface-variant"
               )}>
-                {preset.label}
+                {t(opt.labelKey)}
               </span>
               <span className="text-[11px] text-on-surface-variant/70 leading-tight text-center">
-                {preset.description}
+                {t(opt.descKey)}
               </span>
             </button>
           );

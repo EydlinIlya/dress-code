@@ -1,8 +1,6 @@
 import type { GuestStyle } from "@/types";
 
 export interface GuestStyleConfig {
-  label: string;
-  description: string;
   bg: string;
   text: string;
   textMuted: string;
@@ -14,10 +12,9 @@ export interface GuestStyleConfig {
   bgPosition?: string;
 }
 
+// Display labels/descriptions live in src/lib/i18n/translations.ts (style.*).
 export const GUEST_STYLES: Record<GuestStyle, GuestStyleConfig> = {
   wedding: {
-    label: "Wedding",
-    description: "Soft and romantic",
     bg: "#faf8f4",
     text: "#3a3632",
     textMuted: "#8a847c",
@@ -31,8 +28,6 @@ export const GUEST_STYLES: Record<GuestStyle, GuestStyleConfig> = {
     ].join(", "),
   },
   party: {
-    label: "Party",
-    description: "Bold and fun",
     bg: "#1a0a2e",
     text: "#f0eaff",
     textMuted: "#b0a4c8",
@@ -49,8 +44,6 @@ export const GUEST_STYLES: Record<GuestStyle, GuestStyleConfig> = {
     bgPosition: "0 0, 25px 15px, 10px 40px, 45px 30px",
   },
   gala: {
-    label: "Gala",
-    description: "Elegant black-tie",
     bg: "#0c0c14",
     text: "#ece8e0",
     textMuted: "#a09a90",
