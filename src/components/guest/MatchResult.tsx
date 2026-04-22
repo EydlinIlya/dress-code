@@ -3,7 +3,8 @@
 import { CircleCheck, CircleAlert, CircleX } from "lucide-react";
 import { evaluateMatch } from "@/lib/colors";
 import { cn } from "@/lib/utils";
-import type { Strictness } from "@/types";
+import { useT } from "@/lib/i18n/LocaleProvider";
+import type { MatchLevel, Strictness } from "@/types";
 
 interface MatchResultProps {
   sampledColor: string;
@@ -36,9 +37,17 @@ const config = {
   },
 };
 
+const levelMessageKey: Record<MatchLevel, "match.good" | "match.ask" | "match.no"> = {
+  good: "match.good",
+  ask: "match.ask",
+  no: "match.no",
+};
+
 export function MatchResult({ sampledColor, allowedColors, variant = "card", strictness = "default" }: MatchResultProps) {
+  const t = useT();
   const result = evaluateMatch(sampledColor, allowedColors, strictness);
-  const { level, message, closestColor } = result;
+  const { level, closestColor } = result;
+  const message = t(levelMessageKey[level]);
   const { icon: Icon, bg, text, border, swatchRing } = config[level];
 
   if (variant === "sticky") {
@@ -62,7 +71,7 @@ export function MatchResult({ sampledColor, allowedColors, variant = "card", str
               className={cn("w-9 h-9 rounded-full ring-2 shadow-sm", swatchRing)}
               style={{ backgroundColor: sampledColor }}
             />
-            <span className="text-on-surface-variant/40 text-xs">vs</span>
+            <span className="text-on-surface-variant/40 text-xs">{t("match.vs")}</span>
             <div
               className="w-9 h-9 rounded-full shadow-sm border border-outline-variant/20"
               style={{ backgroundColor: closestColor }}
@@ -98,17 +107,17 @@ export function MatchResult({ sampledColor, allowedColors, variant = "card", str
               style={{ backgroundColor: sampledColor }}
             />
             <span className="text-[11px] text-on-surface-variant font-mono mt-2 block">
-              Your pick
+              {t("match.yourPick")}
             </span>
           </div>
-          <span className="text-on-surface-variant/40 text-sm font-medium">vs</span>
+          <span className="text-on-surface-variant/40 text-sm font-medium">{t("match.vs")}</span>
           <div className="text-center">
             <div
               className="w-14 h-14 rounded-full mx-auto shadow-sm border border-outline-variant/20"
               style={{ backgroundColor: closestColor }}
             />
             <span className="text-[11px] text-on-surface-variant font-mono mt-2 block">
-              Closest
+              {t("match.closest")}
             </span>
           </div>
         </div>

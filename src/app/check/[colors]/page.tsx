@@ -1,10 +1,11 @@
 "use client";
 
-import { use, useMemo } from "react";
+import { use, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { notFound } from "next/navigation";
 import { GuestView } from "@/components/guest/GuestView";
 import { parseColorsFromUrl, sanitizeName, parseStrictness, decodeShareData } from "@/lib/colors";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { Strictness } from "@/types";
 
 export default function GuestPage({
@@ -24,6 +25,16 @@ export default function GuestPage({
     () => parseColorsFromUrl(colorsParam),
     [colorsParam]
   );
+
+  const { setLocale } = useLocale();
+  useEffect(() => {
+    if (!decoded.locale) return;
+    // Only use the host's locale as a default; never override the guest's own choice.
+    const stored = window.localStorage.getItem("dress-code:locale");
+    if (!stored) setLocale(decoded.locale);
+    // decoded.locale and setLocale are both stable — this runs once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decoded.locale, setLocale]);
 
   if (allowedColors.length === 0) {
     notFound();

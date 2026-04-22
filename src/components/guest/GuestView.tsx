@@ -10,8 +10,9 @@ import { PhotoThumbnails } from "@/components/guest/PhotoThumbnails";
 import { Header } from "@/components/shared/Header";
 import { useCanvasSampler } from "@/hooks/useCanvasSampler";
 import { useEyeDropper } from "@/hooks/useEyeDropper";
-import { PLAYFUL_LINES } from "@/lib/constants";
+import { PLAYFUL_LINE_KEYS } from "@/lib/constants";
 import { getStyleCssVars, getStyleBgProps } from "@/lib/guest-styles";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import type { SampledPoint } from "@/types";
 import type { Strictness, GuestStyle } from "@/types";
 
@@ -22,7 +23,12 @@ interface Photo {
 
 function isPlural(name: string): boolean {
   const lower = name.toLowerCase();
-  return lower.includes(" & ") || lower.includes(" and ") || lower.includes(", ");
+  return (
+    lower.includes(" & ") ||
+    lower.includes(" and ") ||
+    lower.includes(", ") ||
+    lower.includes(" и ")
+  );
 }
 
 interface GuestViewProps {
@@ -34,8 +40,9 @@ interface GuestViewProps {
 }
 
 export function GuestView({ allowedColors, hostName, strictness, guestStyle = "wedding", banner }: GuestViewProps) {
-  const [playfulLine] = useState(
-    () => PLAYFUL_LINES[Math.floor(Math.random() * PLAYFUL_LINES.length)]
+  const t = useT();
+  const [playfulKey] = useState(
+    () => PLAYFUL_LINE_KEYS[Math.floor(Math.random() * PLAYFUL_LINE_KEYS.length)]
   );
 
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -73,7 +80,9 @@ export function GuestView({ allowedColors, hostName, strictness, guestStyle = "w
     e.target.value = "";
   }
 
-  const inviteVerb = hostName && isPlural(hostName) ? "invite" : "invites";
+  const inviteVerb = hostName && isPlural(hostName)
+    ? t("guest.invite.verb.plural")
+    : t("guest.invite.verb.singular");
 
   const styleVars = getStyleCssVars(guestStyle);
   const bgProps = getStyleBgProps(guestStyle);
@@ -99,16 +108,26 @@ export function GuestView({ allowedColors, hostName, strictness, guestStyle = "w
             style={{ fontFamily: "var(--guest-font-heading)", color: "var(--guest-text)" }}
           >
             {hostName ? (
-              <><span style={{ color: "var(--guest-text-muted)" }}>{hostName}</span> {inviteVerb} you to check your outfit.</>
+              (() => {
+                const template = t("guest.greeting.personal", { host: "\u0000HOST\u0000", verb: inviteVerb });
+                const [before, after] = template.split("\u0000HOST\u0000");
+                return (
+                  <>
+                    {before}
+                    <span style={{ color: "var(--guest-text-muted)" }}>{hostName}</span>
+                    {after}
+                  </>
+                );
+              })()
             ) : (
-              <>You&apos;re invited to an event with a dress code.</>
+              <>{t("guest.greeting.default")}</>
             )}
           </h2>
           <p style={{ color: "var(--guest-text-muted)" }} className="leading-relaxed">
-            Upload a photo to see if your outfit matches.
+            {t("guest.instructions")}
           </p>
           <p className="text-sm mt-2 italic opacity-60" style={{ color: "var(--guest-text-muted)" }}>
-            {playfulLine}
+            {t(playfulKey)}
           </p>
         </section>
 
@@ -124,7 +143,7 @@ export function GuestView({ allowedColors, hostName, strictness, guestStyle = "w
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 <span className="text-sm font-medium text-on-tertiary-container">
-                  We&apos;ll analyze your color match instantly.
+                  {t("guest.encouragement")}
                 </span>
               </div>
             )}
@@ -161,14 +180,14 @@ export function GuestView({ allowedColors, hostName, strictness, guestStyle = "w
                     className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors py-3 px-5 rounded-2xl hover:bg-surface-low border border-outline-variant/20"
                   >
                     <Plus className="h-5 w-5" />
-                    Add photo
+                    {t("guest.addPhoto")}
                   </button>
                   <button
                     onClick={() => cameraRef.current?.click()}
                     className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors py-3 px-5 rounded-2xl hover:bg-surface-low border border-outline-variant/20"
                   >
                     <Camera className="h-5 w-5" />
-                    Take photo
+                    {t("guest.takePhoto")}
                   </button>
                   {eyeDropperSupported && (
                     <button
@@ -176,7 +195,7 @@ export function GuestView({ allowedColors, hostName, strictness, guestStyle = "w
                       className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors py-3 px-5 rounded-2xl hover:bg-surface-low border border-outline-variant/20"
                     >
                       <Pipette className="h-5 w-5" />
-                      Pick from screen
+                      {t("guest.pickFromScreen")}
                     </button>
                   )}
                   <input

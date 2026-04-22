@@ -4,7 +4,6 @@ export type GuestStyle = "wedding" | "party" | "gala";
 
 export interface MatchResult {
   level: MatchLevel;
-  message: string;
   deltaE: number;
   closestColor: string;
 }

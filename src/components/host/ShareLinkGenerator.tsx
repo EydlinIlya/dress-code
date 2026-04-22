@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Link, Check, Copy, ChevronDown } from "lucide-react";
 import { generateShareUrl } from "@/lib/colors";
 import { useClipboard } from "@/hooks/useClipboard";
+import { useT } from "@/lib/i18n/LocaleProvider";
 
 interface ShareLinkGeneratorProps {
   colors: string[];
@@ -12,6 +13,7 @@ interface ShareLinkGeneratorProps {
 export function ShareLinkGenerator({ colors }: ShareLinkGeneratorProps) {
   const { copied, copy } = useClipboard();
   const ref = useRef<HTMLElement>(null);
+  const t = useT();
 
   if (colors.length === 0) return null;
 
@@ -33,7 +35,7 @@ export function ShareLinkGenerator({ colors }: ShareLinkGeneratorProps) {
         className="lg:hidden fixed bottom-8 right-6 z-40 soul-gradient text-on-primary px-5 py-3.5 rounded-full flex items-center gap-2 shadow-lg hover:opacity-95 active:scale-95 transition-all safe-bottom"
       >
         <Link className="h-4 w-4" />
-        <span className="text-sm font-semibold">Share Link</span>
+        <span className="text-sm font-semibold">{t("share.shareLink")}</span>
         <ChevronDown className="h-4 w-4" />
       </button>
 
@@ -46,7 +48,7 @@ export function ShareLinkGenerator({ colors }: ShareLinkGeneratorProps) {
             <Link className="h-5 w-5 text-primary" />
           </div>
           <h3 className="font-[family-name:var(--font-heading)] font-semibold text-lg">
-            Share Your Link
+            {t("share.heading")}
           </h3>
         </div>
 
@@ -61,12 +63,12 @@ export function ShareLinkGenerator({ colors }: ShareLinkGeneratorProps) {
           {copied ? (
             <>
               <Check className="h-5 w-5" />
-              <span>Copied!</span>
+              <span>{t("share.copied")}</span>
             </>
           ) : (
             <>
               <Copy className="h-5 w-5" />
-              <span>Copy Link</span>
+              <span>{t("share.copyLink")}</span>
             </>
           )}
         </button>

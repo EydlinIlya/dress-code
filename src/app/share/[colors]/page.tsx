@@ -10,10 +10,11 @@ import { useClipboard } from "@/hooks/useClipboard";
 import { MAX_NAME_LENGTH } from "@/lib/constants";
 import { notFound } from "next/navigation";
 import type { Strictness, GuestStyle } from "@/types";
+import { useT, useLocale } from "@/lib/i18n/LocaleProvider";
 
 function isPlural(name: string): boolean {
   const lower = name.toLowerCase();
-  return lower.includes(" & ") || lower.includes(" and ") || lower.includes(", ");
+  return lower.includes(" & ") || lower.includes(" and ") || lower.includes(", ") || lower.includes(" и ");
 }
 
 export default function SharePage({
@@ -31,13 +32,15 @@ export default function SharePage({
   const [strictness, setStrictness] = useState<Strictness>("default");
   const [guestStyle, setGuestStyle] = useState<GuestStyle>("wedding");
   const { copied, copy } = useClipboard();
+  const t = useT();
+  const { locale } = useLocale();
 
   if (allowedColors.length === 0) {
     notFound();
   }
 
   const basePath = generateShareUrl(allowedColors);
-  const encoded = encodeShareData(hostName.trim(), strictness, guestStyle);
+  const encoded = encodeShareData(hostName.trim(), strictness, guestStyle, locale);
   const queryString = encoded ? `?d=${encoded}` : "";
   const fullUrl =
     typeof window !== "undefined"
@@ -54,16 +57,16 @@ export default function SharePage({
           className="inline-flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to color picker
+          {t("share.back")}
         </a>
 
         {/* Hero */}
         <section className="mb-10 max-w-xl">
           <h2 className="text-3xl md:text-4xl leading-tight font-[family-name:var(--font-heading)] font-semibold tracking-tight text-on-surface mb-3">
-            Your dress code is ready.
+            {t("share.title")}
           </h2>
           <p className="text-on-surface-variant leading-relaxed">
-            Customize your settings and share the link with your guests.
+            {t("share.subtitle")}
           </p>
         </section>
 
@@ -74,7 +77,7 @@ export default function SharePage({
             {/* Color swatches */}
             <section className="p-6 bg-surface-low rounded-[1.5rem]">
               <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant block mb-5">
-                Your Palette
+                {t("share.palette")}
               </span>
               <div className="grid grid-cols-4 gap-4 justify-items-center">
                 {allowedColors.map((color, i) => (
@@ -111,29 +114,31 @@ export default function SharePage({
                   <Link className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="font-[family-name:var(--font-heading)] font-semibold text-xl">
-                  Share Your Link
+                  {t("share.heading")}
                 </h3>
               </div>
 
               <p className="text-sm text-on-surface-variant mb-6 leading-relaxed">
-                Send this link to your guests. They&apos;ll be able to upload a photo and instantly check if their outfit matches your palette.
+                {t("share.description")}
               </p>
 
               {/* Host name */}
               <div className="mb-5">
                 <label className="block text-sm font-medium text-on-surface mb-1.5">
-                  Your name <span className="text-on-surface-variant/60">(optional)</span>
+                  {t("share.yourName")} <span className="text-on-surface-variant/60">{t("share.optional")}</span>
                 </label>
                 <p className="text-xs text-on-surface-variant mb-2">
-                  Guests will see &quot;{hostName.trim()
-                    ? `${hostName.trim()} ${isPlural(hostName) ? "invite" : "invites"}`
-                    : "You\u2019re invited to an event with a dress code"}&quot;
+                  {t("share.guestsWillSee", {
+                    text: hostName.trim()
+                      ? `${hostName.trim()} ${isPlural(hostName) ? t("share.inviteSuffix") : t("share.invitesSuffix")}`
+                      : t("share.defaultGreeting"),
+                  })}
                 </p>
                 <input
                   type="text"
                   value={hostName}
                   onChange={(e) => setHostName(e.target.value.slice(0, MAX_NAME_LENGTH))}
-                  placeholder="e.g. Emma & James"
+                  placeholder={t("share.namePlaceholder")}
                   className="w-full bg-surface-low border border-outline-variant/20 rounded-xl py-3 px-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
               </div>
@@ -149,12 +154,12 @@ export default function SharePage({
                 {copied ? (
                   <>
                     <Check className="h-5 w-5" />
-                    <span>Copied!</span>
+                    <span>{t("share.copied")}</span>
                   </>
                 ) : (
                   <>
                     <Copy className="h-5 w-5" />
-                    <span>Copy Link</span>
+                    <span>{t("share.copyLink")}</span>
                   </>
                 )}
               </button>
@@ -164,7 +169,7 @@ export default function SharePage({
                 className="w-full mt-3 border border-outline-variant/30 text-on-surface font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-surface-low active:scale-[0.98] transition-all"
               >
                 <Eye className="h-5 w-5" />
-                <span>Preview as Guest</span>
+                <span>{t("share.previewAsGuest")}</span>
               </a>
             </section>
           </div>

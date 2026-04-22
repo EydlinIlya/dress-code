@@ -6,6 +6,7 @@ import { Pipette, Plus } from "lucide-react";
 import { useEyeDropper } from "@/hooks/useEyeDropper";
 import { isValidHex } from "@/lib/colors";
 import { MAX_COLORS } from "@/lib/constants";
+import { useT } from "@/lib/i18n/LocaleProvider";
 
 interface ColorPickerPanelProps {
   colors: string[];
@@ -15,6 +16,7 @@ interface ColorPickerPanelProps {
 export function ColorPickerPanel({ colors, onAddColor }: ColorPickerPanelProps) {
   const [currentColor, setCurrentColor] = useState("#e05a8d");
   const { supported: eyeDropperSupported, pickColor } = useEyeDropper();
+  const t = useT();
 
   const handleAdd = () => {
     if (colors.length >= MAX_COLORS) return;
@@ -41,9 +43,9 @@ export function ColorPickerPanel({ colors, onAddColor }: ColorPickerPanelProps) 
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="flex-1 relative">
+        <div className="flex-1 relative mt-3">
           <label className="absolute -top-2.5 left-4 bg-surface-low px-1.5 text-[10px] uppercase font-bold tracking-wider text-primary z-10">
-            Hex Code
+            {t("picker.hexCode")}
           </label>
           <div className="flex items-center bg-surface-lowest rounded-xl py-3.5 px-4 border border-outline-variant/20">
             <span className="text-on-surface-variant text-sm mr-1">#</span>
@@ -60,7 +62,7 @@ export function ColorPickerPanel({ colors, onAddColor }: ColorPickerPanelProps) 
           <button
             onClick={handleEyeDropper}
             className="w-14 h-14 flex items-center justify-center rounded-xl border border-outline-variant/20 bg-surface-lowest text-on-surface-variant hover:bg-surface-high transition-colors shrink-0"
-            title="Pick color from screen"
+            title={t("picker.pickFromScreen")}
           >
             <Pipette className="h-5 w-5" />
           </button>
@@ -73,7 +75,7 @@ export function ColorPickerPanel({ colors, onAddColor }: ColorPickerPanelProps) 
         className="w-full soul-gradient text-on-primary h-14 flex items-center justify-center gap-2 rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-40 font-semibold"
       >
         <Plus className="h-5 w-5" />
-        Add Color
+        {t("picker.addColor")}
       </button>
     </div>
   );

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Manrope, JetBrains_Mono, Playfair_Display, Fredoka, Nunito } from "next/font/google";
+import { cookies } from "next/headers";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
+import { normalizeLocale } from "@/lib/i18n/translations";
 import "./globals.css";
 
 const inter = Inter({
@@ -51,18 +54,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const initialLocale = normalizeLocale(cookieStore.get("dc_locale")?.value) ?? "en";
+
   return (
     <html
-      lang="en"
+      lang={initialLocale}
+      suppressHydrationWarning
       className={`${inter.variable} ${manrope.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} ${fredoka.variable} ${nunito.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
-        <TooltipProvider>{children}</TooltipProvider>
+        <LocaleProvider initialLocale={initialLocale}>
+          <TooltipProvider>{children}</TooltipProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

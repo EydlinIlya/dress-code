@@ -23,11 +23,12 @@ export const AWB_MAX_SCALE = 1.2;
 // 1 colour → ×1.00   2 → ×0.92   5 → ×0.85   10 → ×0.79
 export const COLOR_COUNT_EXPONENT = 0.12;
 
-// Strictness presets: [good threshold, ask threshold]
+// Strictness presets: [good threshold, ask threshold].
+// Display labels/descriptions live in src/lib/i18n/translations.ts.
 export const STRICTNESS_PRESETS = {
-  strict:  { good: 14, ask: 20, label: "Exact match", description: "Uniform — colors must be spot-on" },
-  default: { good: 18, ask: 28, label: "Photo-ready", description: "Close enough for nice photos" },
-  relaxed: { good: 25, ask: 35, label: "General vibe", description: "Right ballpark is fine" },
+  strict:  { good: 14, ask: 20 },
+  default: { good: 18, ask: 28 },
+  relaxed: { good: 25, ask: 35 },
 } as const;
 
 export const MAX_COLORS = 10;
@@ -36,15 +37,4 @@ export const SAMPLE_REGION_SIZE = 5;
 
 export const MAX_NAME_LENGTH = 50;
 
-export const MATCH_MESSAGES = {
-  good: "Good choice!",
-  ask: "Better ask the host",
-  no: "Not a match, try something else",
-} as const;
-
-export const PLAYFUL_LINES = [
-  "It\u2019s a pleasure to have you as a guest. In some dresses, more pleasure than in others.",
-  "Looking good is optional. Looking right is not.",
-  "The host picked the colors. You pick the outfit. Let\u2019s see if it\u2019s a match.",
-  "Your style, their palette. Let\u2019s make sure they agree.",
-] as const;
+export const PLAYFUL_LINE_KEYS = ["playful.1", "playful.2", "playful.3", "playful.4"] as const;

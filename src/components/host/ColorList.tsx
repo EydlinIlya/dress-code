@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useT } from "@/lib/i18n/LocaleProvider";
 
 interface ColorListProps {
   colors: string[];
@@ -10,6 +11,7 @@ interface ColorListProps {
 }
 
 export function ColorList({ colors, onRemove, activeIndex, onSelect }: ColorListProps) {
+  const t = useT();
   if (colors.length === 0) {
     return (
       <div className="flex items-start gap-6 min-h-[7.5rem] pt-2 pb-4 px-2">
@@ -37,12 +39,12 @@ export function ColorList({ colors, onRemove, activeIndex, onSelect }: ColorList
               onClick={() => onSelect?.(i)}
               className={`w-20 h-20 rounded-2xl shadow-[inset_0px_2px_4px_rgba(0,0,0,0.1)] transition-all ${activeIndex === i ? "ring-3 ring-primary ring-offset-2" : "hover:ring-2 hover:ring-outline-variant/40 hover:ring-offset-1"}`}
               style={{ backgroundColor: color }}
-              aria-label={`Show suggestions for ${color}`}
+              aria-label={t("list.showSuggestions", { color })}
             />
             <button
               onClick={() => onRemove(i)}
               className="absolute top-1 right-1 w-6 h-6 bg-black/40 backdrop-blur-sm text-white rounded-full flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-all hover:bg-black/60"
-              aria-label={`Remove color ${color}`}
+              aria-label={t("list.removeColor", { color })}
             >
               <X className="h-3 w-3" />
             </button>

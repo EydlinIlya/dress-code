@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/LocaleProvider";
 
 interface PhotoThumbnailsProps {
   photos: { file: File; url: string }[];
@@ -13,6 +14,7 @@ export function PhotoThumbnails({
   activeIndex,
   onSelect,
 }: PhotoThumbnailsProps) {
+  const t = useT();
   if (photos.length <= 1) return null;
 
   return (
@@ -31,7 +33,7 @@ export function PhotoThumbnails({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={photo.url}
-            alt={`Photo ${i + 1}`}
+            alt={t("photos.alt", { n: i + 1 })}
             className="w-full h-full object-cover"
           />
         </button>
