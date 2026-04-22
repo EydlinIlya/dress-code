@@ -94,7 +94,7 @@ export function MatchResult({ sampledColor, allowedColors, variant = "card", str
         <Icon className={cn("h-12 w-12", text)} />
         <span
           className={cn(
-            "text-lg font-[family-name:var(--font-heading)] font-semibold",
+            "text-lg font-[family-name:var(--font-heading)] font-semibold text-center",
             text
           )}
         >
