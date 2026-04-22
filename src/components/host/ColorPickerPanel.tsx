@@ -43,7 +43,7 @@ export function ColorPickerPanel({ colors, onAddColor }: ColorPickerPanelProps) 
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="flex-1 relative">
+        <div className="flex-1 relative mt-3">
           <label className="absolute -top-2.5 left-4 bg-surface-low px-1.5 text-[10px] uppercase font-bold tracking-wider text-primary z-10">
             {t("picker.hexCode")}
           </label>

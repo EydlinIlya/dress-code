@@ -16,7 +16,8 @@ import {
   translate,
 } from "./translations";
 
-const STORAGE_KEY = "dress-code:locale";
+export const STORAGE_KEY = "dress-code:locale";
+const COOKIE_NAME = "dc_locale";
 
 interface LocaleContextValue {
   locale: Locale;
@@ -26,26 +27,39 @@ interface LocaleContextValue {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    if (typeof window === "undefined") return "en";
-    const stored = normalizeLocale(window.localStorage.getItem(STORAGE_KEY));
-    if (stored) return stored;
-    return detectBrowserLocale();
-  });
-
-  useEffect(() => {
-    if (typeof document !== "undefined") {
-      document.documentElement.lang = locale;
-    }
-  }, [locale]);
+export function LocaleProvider({
+  children,
+  initialLocale = "en",
+}: {
+  children: React.ReactNode;
+  initialLocale?: Locale;
+}) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);
     if (typeof window !== "undefined") {
       window.localStorage.setItem(STORAGE_KEY, next);
+      document.cookie = `${COOKIE_NAME}=${next}; path=/; max-age=31536000; SameSite=Lax`;
     }
   }, []);
+
+  // On first client mount, reconcile with localStorage/browser preference.
+  // Covers: (a) existing users who have localStorage but no cookie yet,
+  // (b) first-time visitors whose browser language is Russian.
+  // Using setLocale so any detected preference is also persisted to the cookie.
+  useEffect(() => {
+    const stored = normalizeLocale(window.localStorage.getItem(STORAGE_KEY));
+    const detected = stored ?? detectBrowserLocale();
+    if (detected !== initialLocale) {
+      setLocale(detected);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally mount-only; initialLocale and setLocale are stable
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const value = useMemo<LocaleContextValue>(
     () => ({

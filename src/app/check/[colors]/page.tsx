@@ -26,12 +26,15 @@ export default function GuestPage({
     [colorsParam]
   );
 
-  const { locale, setLocale } = useLocale();
+  const { setLocale } = useLocale();
   useEffect(() => {
-    if (decoded.locale && decoded.locale !== locale) {
-      setLocale(decoded.locale);
-    }
-  }, [decoded.locale, locale, setLocale]);
+    if (!decoded.locale) return;
+    // Only use the host's locale as a default; never override the guest's own choice.
+    const stored = window.localStorage.getItem("dress-code:locale");
+    if (!stored) setLocale(decoded.locale);
+    // decoded.locale and setLocale are both stable — this runs once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decoded.locale, setLocale]);
 
   if (allowedColors.length === 0) {
     notFound();
