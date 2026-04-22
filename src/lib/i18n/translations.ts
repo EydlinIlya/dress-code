@@ -57,7 +57,7 @@ const en = {
   "guest.addPhoto": "Add photo",
   "guest.takePhoto": "Take photo",
   "guest.pickFromScreen": "Pick from screen",
-  "guest.hostsPalette": "Host's Palette",
+  "guest.hostsPalette": "Event's Palette",
 
   "uploader.title": "Upload Photo",
   "uploader.hint": "Tap to browse gallery or drag & drop",
@@ -170,7 +170,7 @@ const ru: Record<TranslationKey, string> = {
   "guest.addPhoto": "Добавить фото",
   "guest.takePhoto": "Сделать фото",
   "guest.pickFromScreen": "Пипетка с экрана",
-  "guest.hostsPalette": "Палитра хозяина",
+  "guest.hostsPalette": "Цвета события",
 
   "uploader.title": "Загрузить фото",
   "uploader.hint": "Нажмите, чтобы выбрать из галереи, или перетащите",
